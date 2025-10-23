@@ -7,7 +7,6 @@ import { useDebouncedCallback } from "use-debounce";
 
 import {
   Alert,
-  AppState,
   Pressable,
   View,
   Text,
@@ -26,6 +25,8 @@ export default function Login() {
   const [authError, setAuthError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [pwError, setPwError] = useState<string | null>(null);
+  const [emailLogin, setEmailLogin] = useState(false);
+  const [myPin, setMyPin] = useState("");
 
   const inputMargins = emailError ? 8 : 20;
 
@@ -75,6 +76,20 @@ export default function Login() {
     }
   }
 
+  async function signInWithPin() {
+    setLoading(true);
+    const truePIN = user?.pin;
+    const verifiedPin = Number(myPin) === truePIN ? true : false;
+
+    if (verifiedPin) {
+      setLoading(false);
+      authContext.logIn();
+    } else {
+      setAuthError("Invalid PIN!");
+      setLoading(false);
+    }
+  }
+
   async function signInWithEmail() {
     setLoading(true);
     let verified = checkCredentials();
@@ -103,56 +118,107 @@ export default function Login() {
     );
   }
 
-  return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: insets.top, paddingBottom: insets.bottom },
-      ]}
-    >
-      <Text style={styles.heading}>Sign In to your Account:</Text>
+  if (emailLogin) {
+    return (
+      <View
+        style={[
+          styles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <Text style={styles.heading}>Sign In to your Account:</Text>
 
-      <View style={styles.inputSection}>
-        <Text style={styles.inputTitle}>Email:</Text>
-        <TextInput
-          autoFocus={true}
-          showSoftInputOnFocus={true}
-          style={[styles.textInput, { marginBottom: inputMargins }]}
-          placeholder="Email Address"
-          defaultValue={email}
-          autoCapitalize="none"
-          onChangeText={(newText) => {
-            debounceEmail(newText);
-          }}
-        />
+        <View style={styles.inputSection}>
+          <Text style={styles.inputTitle}>Email:</Text>
+          <TextInput
+            autoFocus={true}
+            showSoftInputOnFocus={true}
+            style={[styles.textInput, { marginBottom: inputMargins }]}
+            placeholder="Email Address"
+            defaultValue={email}
+            autoCapitalize="none"
+            onChangeText={(newText) => {
+              debounceEmail(newText);
+            }}
+          />
 
-        {emailError ? (
-          <Text style={{ color: "red", marginBottom: 8 }}>{emailError}</Text>
-        ) : null}
+          {emailError ? (
+            <Text style={{ color: "red", marginBottom: 8 }}>{emailError}</Text>
+          ) : null}
 
-        <Text style={styles.inputTitle}>Password:</Text>
-        <TextInput
-          style={[styles.textInput, { marginBottom: inputMargins }]}
-          placeholder="Password"
-          defaultValue={password}
-          autoCapitalize="none"
-          secureTextEntry={true}
-          onChangeText={(newText) => debouncePassword(newText)}
-        />
+          <Text style={styles.inputTitle}>Password:</Text>
+          <TextInput
+            style={[styles.textInput, { marginBottom: inputMargins }]}
+            placeholder="Password"
+            defaultValue={password}
+            autoCapitalize="none"
+            secureTextEntry={true}
+            onChangeText={(newText) => debouncePassword(newText)}
+          />
 
-        {pwError ? (
-          <Text style={{ color: "red", marginBottom: 8 }}>{pwError}</Text>
-        ) : null}
+          {pwError ? (
+            <Text style={{ color: "red", marginBottom: 8 }}>{pwError}</Text>
+          ) : null}
 
-        {authError && <Text style={styles.errorMessage}>{authError}!</Text>}
+          {authError && <Text style={styles.errorMessage}>{authError}!</Text>}
+
+          <View style={styles.submitSection}>
+            <Pressable
+              onPress={() => signInWithEmail()}
+              style={styles.submitBtn}
+            >
+              <Text style={styles.btnText}>Submit Credentials</Text>
+            </Pressable>
+          </View>
+
+          <Pressable onPress={() => setShowModal(true)}>
+            <Text
+              style={{
+                fontSize: 18,
+                color: "#537df1",
+                fontWeight: 700,
+                marginTop: 30,
+              }}
+            >
+              Forgot my password...
+            </Text>
+          </Pressable>
+
+          <PasswordModal showModal={showModal} setShowModal={setShowModal} />
+        </View>
+      </View>
+    );
+  } else {
+    return (
+      <View
+        style={[
+          styles.container,
+          { paddingTop: insets.top, paddingBottom: insets.bottom },
+        ]}
+      >
+        <Text style={styles.pinHeading}>Sign in with PIN:</Text>
+        <View style={[{ flexDirection: "column", marginTop: 40 }]}>
+          <Text style={[styles.inputTitle]}>4-Digit PIN:</Text>
+          <TextInput
+            showSoftInputOnFocus={true}
+            keyboardType="numeric"
+            style={[styles.textPINInput]}
+            defaultValue={myPin}
+            secureTextEntry={true}
+            onChangeText={(newText) => setMyPin(newText)}
+            autoCapitalize="none"
+          />
+
+          {authError && <Text style={styles.errorMessage}>{authError}!</Text>}
+        </View>
 
         <View style={styles.submitSection}>
-          <Pressable onPress={() => signInWithEmail()} style={styles.submitBtn}>
-            <Text style={styles.btnText}>Submit Credentials</Text>
+          <Pressable onPress={() => signInWithPin()} style={styles.submitBtn}>
+            <Text style={styles.btnText}>Submit PIN</Text>
           </Pressable>
         </View>
 
-        <Pressable onPress={() => setShowModal(true)}>
+        <Pressable onPress={() => setEmailLogin(true)}>
           <Text
             style={{
               fontSize: 18,
@@ -161,14 +227,12 @@ export default function Login() {
               marginTop: 30,
             }}
           >
-            Forgot my password...
+            Forgot my PIN...
           </Text>
         </Pressable>
-
-        <PasswordModal showModal={showModal} setShowModal={setShowModal} />
       </View>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -184,6 +248,12 @@ const styles = StyleSheet.create({
     fontWeight: 600,
     color: "blue",
     marginVertical: 20,
+  },
+  pinHeading: {
+    fontSize: 18,
+    fontWeight: 600,
+    color: "blue",
+    marginTop: 40,
   },
   inputSection: {
     width: "70%",
@@ -211,6 +281,14 @@ const styles = StyleSheet.create({
     marginTop: 20,
     // justifyContent: "center",
     alignItems: "center",
+  },
+  textPINInput: {
+    height: 38,
+    paddingLeft: 10,
+    borderRadius: 4,
+    backgroundColor: "#fff",
+    textAlignVertical: "center",
+    marginBottom: 20,
   },
 
   errorMessage: {

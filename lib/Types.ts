@@ -10,6 +10,7 @@ export type User = {
   email: string;
   password?: string;
   username: string;
+  pin: number;
 };
 
 export type Update = {

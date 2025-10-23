@@ -1,7 +1,7 @@
 import ItemModal from "@/components/modals/ItemModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useDBFunctions } from "@/lib/DBUSE";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 
 import { View, Text, StyleSheet, Pressable } from "react-native";
@@ -12,6 +12,7 @@ export default function HomeScreen() {
   const { isPending, items } = useDBFunctions().useFetchAll();
   const { isFetching, listItems } = useDBFunctions().useFetchListItems();
   const [showItemModal, setShowItemModal] = useState(false);
+  const router = useRouter();
 
   if (isPending || isFetching || isCollecting)
     return (
@@ -24,6 +25,13 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={[styles.container]}>
+      <Pressable
+        style={{ position: "absolute", top: 50, right: 34 }}
+        onPress={() => router.push("/admin")}
+      >
+        <Ionicons name="settings" color="black" size={30} />
+      </Pressable>
+
       <Link style={{ position: "absolute", bottom: 220 }} href={"./account"}>
         <Ionicons name="person" color="#3854f0" size={40} />
       </Link>
