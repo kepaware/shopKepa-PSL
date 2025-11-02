@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthContext } from "@/utils/authContext";
 import { useContext, useEffect, useState } from "react";
 import { useSQLiteContext } from "expo-sqlite";
+import { RecoveryProvider } from "@/utils/RecoveryContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,79 +51,92 @@ export default function TabLayout() {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <StatusBar style="dark" />
-      <Tabs>
-        <Tabs.Screen
-          name="index"
-          options={{
-            headerShown: false,
-            tabBarLabel: "Home",
-            tabBarButton: HapticTab,
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="home" color={color} size={size} />
-            ),
-            animation: "fade",
-            tabBarStyle: {
-              marginBottom: 6,
-              backgroundColor: "#e1dfeb",
-            },
-          }}
-        />
-        <Tabs.Screen
-          name="list"
-          options={{
-            headerShown: false,
-            tabBarLabel: "List",
-            tabBarIcon: ({ color, size }) => (
-              <FontAwesome name="list-ul" color={color} size={22} />
-            ),
-            animation: "fade",
-            tabBarStyle: {
-              marginBottom: 6,
-              backgroundColor: "#e1dfeb",
-            },
-          }}
-        />
-        <Tabs.Screen
-          name="menu"
-          options={{
-            headerShown: false,
-            tabBarLabel: "Menu",
-            tabBarIcon: ({ color, size }) => (
-              <Ionicons name="map" color={color} size={size} />
-            ),
-            animation: "fade",
-            tabBarStyle: {
-              marginBottom: 6,
-              backgroundColor: "#e1dfeb",
-            },
-          }}
-        />
-        <Tabs.Screen
-          name="admin"
-          options={{
-            headerShown: false,
-            href: null,
-            tabBarStyle: {
-              marginBottom: 6,
-              backgroundColor: "#e1dfeb",
-            },
-          }}
-        />
-        <Tabs.Screen
-          name="account"
-          options={{
-            headerShown: false,
-            href: null,
-            tabBarStyle: {
-              marginBottom: 6,
-              backgroundColor: "#e1dfeb",
-            },
-          }}
-        />
-      </Tabs>
-    </QueryClientProvider>
+    <RecoveryProvider>
+      <QueryClientProvider client={queryClient}>
+        <StatusBar style="dark" />
+        <Tabs>
+          <Tabs.Screen
+            name="index"
+            options={{
+              headerShown: false,
+              tabBarLabel: "Home",
+              tabBarButton: HapticTab,
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="home" color={color} size={size} />
+              ),
+              animation: "fade",
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+          <Tabs.Screen
+            name="list"
+            options={{
+              headerShown: false,
+              tabBarLabel: "List",
+              tabBarIcon: ({ color, size }) => (
+                <FontAwesome name="list-ul" color={color} size={22} />
+              ),
+              animation: "fade",
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+          <Tabs.Screen
+            name="menu"
+            options={{
+              headerShown: false,
+              tabBarLabel: "Menu",
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="map" color={color} size={size} />
+              ),
+              animation: "fade",
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+          <Tabs.Screen
+            name="admin"
+            options={{
+              headerShown: false,
+              href: null,
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+          <Tabs.Screen
+            name="recovery"
+            options={{
+              headerShown: false,
+              href: null,
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+          <Tabs.Screen
+            name="account"
+            options={{
+              headerShown: false,
+              href: null,
+              tabBarStyle: {
+                marginBottom: 6,
+                backgroundColor: "#e1dfeb",
+              },
+            }}
+          />
+        </Tabs>
+      </QueryClientProvider>
+    </RecoveryProvider>
   );
 }
 

@@ -1,6 +1,7 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "@/utils/authContext";
+
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
 

@@ -27,9 +27,9 @@ export default function HomeScreen() {
     <SafeAreaView style={[styles.container]}>
       <Pressable
         style={{ position: "absolute", top: 50, right: 34 }}
-        onPress={() => router.push("/admin")}
+        onPress={() => router.push("/recovery")}
       >
-        <Ionicons name="settings" color="black" size={30} />
+        <Ionicons name="medkit" color="black" size={30} />
       </Pressable>
 
       <Link style={{ position: "absolute", bottom: 220 }} href={"./account"}>
