@@ -1,5 +1,5 @@
 import { useSQLiteContext } from "expo-sqlite";
-import type { User, Update, AddProps, Item, Toggle } from "./Types";
+import type { User, Item, Update, AddProps, SeedArray, Toggle } from "./Types";
 
 export function useDatabase() {
   const db = useSQLiteContext();
@@ -88,6 +88,30 @@ export function useDatabase() {
     }
   };
 
+  const clearMenuTable = async () => {
+    try {
+      await db.runAsync(`DELETE FROM items`);
+    } catch (error) {
+      console.log("DeleteError: ", error);
+    }
+  };
+
+  const seedDatabase = async ({ fileItemsArray }: SeedArray) => {
+    try {
+      fileItemsArray.forEach(async (e) => {
+        await db.runAsync(
+          "INSERT INTO items (label, category, list, user_id) VALUES (?, ?, ?, ?)",
+          e.label,
+          e.category,
+          false,
+          e.user_id
+        );
+      });
+    } catch (error) {
+      console.log("Seed Error: ", error);
+    }
+  };
+
   return {
     getUser,
     updateUser,
@@ -96,5 +120,7 @@ export function useDatabase() {
     addItem,
     toggleItem,
     deleteItem,
+    clearMenuTable,
+    seedDatabase,
   };
 }

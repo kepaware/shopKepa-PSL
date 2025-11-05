@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useDatabase } from "./DBAPI";
-import type { AddProps, Toggle, Update } from "./Types";
+import type { AddProps, Item, SeedArray, Toggle, Update } from "./Types";
 
 export function useDBFunctions() {
   const {
@@ -11,6 +11,8 @@ export function useDBFunctions() {
     addItem,
     toggleItem,
     deleteItem,
+    clearMenuTable,
+    seedDatabase,
   } = useDatabase();
   const queryClient = useQueryClient();
 
@@ -107,6 +109,35 @@ export function useDBFunctions() {
     return { isDeleting, deleteMenuItem };
   }
 
+  function useClearMenuTable() {
+    const { mutate: clearTable, isPending: isClearing } = useMutation({
+      mutationFn: clearMenuTable,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] });
+        queryClient.invalidateQueries({ queryKey: ["listItems"] });
+      },
+      onError: (error) => {
+        console.log("CLEAR TABLE ERROR: ", error.message);
+      },
+    });
+    return { isClearing, clearTable };
+  }
+
+  function useSeedDatabase() {
+    const { mutate: seedDB, isPending: isSeeding } = useMutation({
+      mutationFn: ({ fileItemsArray }: SeedArray) =>
+        seedDatabase({ fileItemsArray }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] });
+        queryClient.invalidateQueries({ queryKey: ["listItems"] });
+      },
+      onError: (error) => {
+        console.log("SEED DB ERROR: ", error.message);
+      },
+    });
+    return { seedDB, isSeeding };
+  }
+
   return {
     useGetUser,
     useUpdateUser,
@@ -115,5 +146,7 @@ export function useDBFunctions() {
     useAddItem,
     useToggleItem,
     useDeleteItem,
+    useClearMenuTable,
+    useSeedDatabase,
   };
 }

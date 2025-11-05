@@ -25,17 +25,14 @@ export default function Backup() {
         await FileSystem.StorageAccessFramework.readDirectoryAsync(
           directory
         ).then((fileInfo) => {
-          //1. Check info array for 'shopKepa' entry:
+          //1. Check info array for 'menu.txt' entry:
           fileInfo.forEach((e) => {
             if (e.endsWith("menu.txt")) {
-              console.log("fileExists: true");
               recoveryContext.setUri(e);
               file = e;
             }
           });
         });
-
-      // console.log("file: ", file);
     } catch (error) {
       console.log("fileCheckError: ", error);
     }
@@ -43,8 +40,6 @@ export default function Backup() {
     if (file !== null) {
       await FileSystem.StorageAccessFramework.deleteAsync(file).then(
         async () => {
-          // console.log("Existing file deleted");
-
           const fileUri =
             await FileSystem.StorageAccessFramework.createFileAsync(
               directory,
@@ -52,7 +47,6 @@ export default function Backup() {
               "text/plain"
             ).then((fileUri) => {
               setCreated(true);
-              console.log("File Created");
               return fileUri;
             });
         }
@@ -64,7 +58,6 @@ export default function Backup() {
         "text/plain"
       ).then((fileUri) => {
         setCreated(true);
-        console.log("File Created");
         return fileUri;
       });
     }
@@ -80,17 +73,17 @@ export default function Backup() {
         jsonData,
         { encoding: FileSystem.EncodingType.UTF8 }
       ).then(() => {
-        // console.log("File written successfully!");
         setWritten(true);
       });
     } catch (error) {
+      Alert.alert("Error writing to file!");
       console.log("Write Error: ", error);
     }
   }
 
   async function backup() {
+    // 1. Request permissions for the parent directory:
     const permissions =
-      // 1. Request permissions for the parent directory:
       await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
 
     // 2. Check permission was granted:
@@ -99,14 +92,11 @@ export default function Backup() {
       return;
     } else {
       setAccess(true);
-      // console.log("Access granted");
 
       const { directoryUri } = permissions;
 
       // 3. Create empty menu file:
       const fileUri = await createFile(directoryUri).then(async (fileUri) => {
-        // console.log("fileUri: ", fileUri);
-
         // 4. Write Menu to File:
         if (fileUri !== null) {
           await writeFile(fileUri);
@@ -117,7 +107,9 @@ export default function Backup() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginBottom: 20 }}>
+      <Text style={styles.subHeading}>BACKUP MENU TO STORAGE:</Text>
+
+      <View style={{ marginTop: 10, marginBottom: 20 }}>
         {access && <ProgressRow description="Permissions granted:" />}
         {created && <ProgressRow description="Recovery File Created:" />}
         {written && <ProgressRow description="Menu Items Written to File:" />}
@@ -153,6 +145,12 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     fontSize: 18,
     fontWeight: 700,
+  },
+  subHeading: {
+    marginTop: 6,
+    fontSize: 16,
+    fontWeight: 700,
+    color: "blue",
   },
   submitBtn: {
     paddingVertical: 8,

@@ -1,24 +1,22 @@
 import Backup from "@/components/Backup";
 import Restore from "@/components/Restore";
-import { Alert, Text, StyleSheet, View, Pressable } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useContext, useState } from "react";
-import { useDBFunctions } from "@/lib/DBUSE";
-import * as FileSystem from "expo-file-system/legacy";
-import { RecoveryContext } from "@/utils/RecoveryContext";
 
 export default function Recovery() {
   const insets = useSafeAreaInsets();
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text style={styles.heading}>RECOVERY:</Text>
+      <Text style={styles.heading}>RECOVERY OPTIONS:</Text>
+      <View style={styles.separator}></View>
       <Backup />
 
       {/* Separator: */}
       <View style={styles.separator}></View>
 
       <Restore />
+      <View style={styles.separator}></View>
     </View>
   );
 }
@@ -48,10 +46,10 @@ const styles = StyleSheet.create({
     fontWeight: 600,
   },
   separator: {
-    width: "80%",
-    marginTop: 10,
-    marginBottom: 20,
-    borderWidth: 1,
+    width: "90%",
+    marginTop: 16,
+    marginBottom: 30,
+    borderWidth: 0.5,
     borderColor: "#000",
   },
 });

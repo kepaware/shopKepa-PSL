@@ -102,17 +102,6 @@ export default function TabLayout() {
             }}
           />
           <Tabs.Screen
-            name="admin"
-            options={{
-              headerShown: false,
-              href: null,
-              tabBarStyle: {
-                marginBottom: 6,
-                backgroundColor: "#e1dfeb",
-              },
-            }}
-          />
-          <Tabs.Screen
             name="recovery"
             options={{
               headerShown: false,

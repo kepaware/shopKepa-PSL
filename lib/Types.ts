@@ -34,3 +34,7 @@ export type Toggle = {
     list: boolean;
   };
 };
+
+export type SeedArray = {
+  fileItemsArray: Item[];
+};
