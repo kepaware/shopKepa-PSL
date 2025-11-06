@@ -25,7 +25,7 @@ const createDBIfNeeded = async (db: SQLiteDatabase) => {
         `
     );
 
-    console.log("DB shopkepa.db created/exists");
+    // console.log("DB shopkepa.db created/exists");
   } catch (error) {
     console.error("Error creating database: ", error);
     createDBError = true;
@@ -34,10 +34,10 @@ const createDBIfNeeded = async (db: SQLiteDatabase) => {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <StatusBar style="dark" />
-      <QueryClientProvider client={queryClient}>
-        <SQLiteProvider databaseName="shopkepa.db" onInit={createDBIfNeeded}>
+    <SQLiteProvider databaseName="shopkepa.db" onInit={createDBIfNeeded}>
+      <AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <StatusBar style="dark" />
           <Stack>
             <Stack.Screen
               name="(protected)"
@@ -63,8 +63,8 @@ export default function App() {
               }}
             />
           </Stack>
-        </SQLiteProvider>
-      </QueryClientProvider>
-    </AuthProvider>
+        </QueryClientProvider>
+      </AuthProvider>
+    </SQLiteProvider>
   );
 }

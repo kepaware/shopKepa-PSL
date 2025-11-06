@@ -20,7 +20,7 @@ const dirStorageKey = "dir-key";
 const uriStorageKey = "uri-key";
 const savedStorageKey = "save-key";
 
-export const RecoveryContext = createContext<RecoveryState>({
+export const MenuContext = createContext<RecoveryState>({
   fileExists: false,
   dirUri: null,
   fileUri: null,
@@ -31,7 +31,7 @@ export const RecoveryContext = createContext<RecoveryState>({
   setSaved: () => {},
 });
 
-export function RecoveryProvider({ children }: PropsWithChildren) {
+export function MenuProvider({ children }: PropsWithChildren) {
   const [fileExists, setFileExists] = useState(false);
   const [dirUri, setDirUri] = useState<string | null>(null);
   const [fileUri, setFileUri] = useState<string | null>(null);
@@ -156,7 +156,7 @@ export function RecoveryProvider({ children }: PropsWithChildren) {
   }, []);
 
   return (
-    <RecoveryContext.Provider
+    <MenuContext.Provider
       value={{
         fileExists,
         fileUri,
@@ -169,6 +169,6 @@ export function RecoveryProvider({ children }: PropsWithChildren) {
       }}
     >
       {children}
-    </RecoveryContext.Provider>
+    </MenuContext.Provider>
   );
 }

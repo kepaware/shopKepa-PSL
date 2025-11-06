@@ -3,16 +3,15 @@ import { Alert, Text, StyleSheet, View, Pressable } from "react-native";
 import { useContext, useState } from "react";
 import { useDBFunctions } from "@/lib/DBUSE";
 import * as FileSystem from "expo-file-system/legacy";
-import { RecoveryContext } from "@/utils/RecoveryContext";
+import { MenuContext } from "@/utils/menuContext";
 import { format } from "date-fns";
 
 export default function Backup() {
   const { items } = useDBFunctions().useFetchAll();
-  const recoveryContext = useContext(RecoveryContext);
+  const menuContext = useContext(MenuContext);
+
   const dateSaved =
-    recoveryContext.savedDate === null
-      ? "Not yet saved"
-      : recoveryContext.savedDate;
+    menuContext.savedDate === null ? "Not yet saved" : menuContext.savedDate;
 
   //Progress Indicators:
   const [access, setAccess] = useState<boolean>(false);
@@ -33,7 +32,7 @@ export default function Backup() {
           //1. Check info array for 'menu.txt' entry:
           fileInfo.forEach((e) => {
             if (e.endsWith("menu.txt")) {
-              recoveryContext.setUri(e);
+              menuContext.setUri(e);
               file = e;
             }
           });
@@ -80,7 +79,7 @@ export default function Backup() {
         { encoding: FileSystem.EncodingType.UTF8 }
       ).then(() => {
         setWritten(true);
-        recoveryContext.setSaved(saveDate);
+        menuContext.setSaved(saveDate);
       });
     } catch (error) {
       Alert.alert("Error writing to file!");
