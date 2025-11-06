@@ -15,7 +15,7 @@ export default function Restore() {
   const [cleared, setCleared] = useState<boolean>(false);
   const [written, setWritten] = useState<boolean>(false);
 
-  const btn1Title = written ? "Restore Complete" : "Restore Database";
+  const btn1Title = written ? "Restore Complete" : "Restore Menu";
   const btn1Color = written ? "#6dc491" : "#060a31";
 
   async function readFile(directoryUri: string) {

@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useDatabase } from "./DBAPI";
-import type { AddProps, Item, SeedArray, Toggle, Update } from "./Types";
+import type { AddProps, SeedArray, Toggle, Update } from "./Types";
 
 export function useDBFunctions() {
   const {

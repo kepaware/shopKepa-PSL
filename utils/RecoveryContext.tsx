@@ -8,28 +8,34 @@ type RecoveryState = {
   fileExists: boolean;
   fileUri: string | null;
   dirUri: string | null;
+  savedDate: string | null;
   setUri: (value: string) => void;
   setDir: (value: string) => void;
   setExists: (value: boolean) => void;
+  setSaved: (value: string) => void;
 };
 
 const fileStorageKey = "file-key";
 const dirStorageKey = "dir-key";
 const uriStorageKey = "uri-key";
+const savedStorageKey = "save-key";
 
 export const RecoveryContext = createContext<RecoveryState>({
   fileExists: false,
   dirUri: null,
   fileUri: null,
+  savedDate: null,
   setUri: () => {},
   setDir: () => {},
   setExists: () => {},
+  setSaved: () => {},
 });
 
 export function RecoveryProvider({ children }: PropsWithChildren) {
   const [fileExists, setFileExists] = useState(false);
   const [dirUri, setDirUri] = useState<string | null>(null);
   const [fileUri, setFileUri] = useState<string | null>(null);
+  const [savedDate, setSavedDate] = useState<string | null>(null);
 
   const storeFileState = async (newState: { fileExists: boolean }) => {
     try {
@@ -56,6 +62,20 @@ export function RecoveryProvider({ children }: PropsWithChildren) {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const storeSaveDate = async (newState: { savedDate: string }) => {
+    try {
+      const jsonValue = JSON.stringify(newState);
+      await AsyncStorage.setItem(savedStorageKey, jsonValue);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const setSaved = (value: string) => {
+    setSavedDate(value);
+    storeSaveDate({ savedDate: value });
   };
 
   const setExists = (value: boolean) => {
@@ -113,11 +133,26 @@ export function RecoveryProvider({ children }: PropsWithChildren) {
           setFileUri(URI.fileUri);
         }
       } catch (error) {
-        console.log("Error fetching from Storage: ", error);
+        console.log("Error fetching fileUri from Storage: ", error);
       }
     };
 
     getFileUriFromStorage();
+
+    const getSavedDate = async () => {
+      try {
+        const value = await AsyncStorage.getItem(savedStorageKey);
+
+        if (value !== null) {
+          const data = JSON.parse(value);
+          setSavedDate(data.savedDate);
+        }
+      } catch (error) {
+        console.log("Error fetching date from storage");
+      }
+    };
+
+    getSavedDate();
   }, []);
 
   return (
@@ -126,9 +161,11 @@ export function RecoveryProvider({ children }: PropsWithChildren) {
         fileExists,
         fileUri,
         dirUri,
+        savedDate,
         setExists,
         setDir,
         setUri,
+        setSaved,
       }}
     >
       {children}

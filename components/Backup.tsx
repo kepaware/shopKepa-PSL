@@ -4,17 +4,22 @@ import { useContext, useState } from "react";
 import { useDBFunctions } from "@/lib/DBUSE";
 import * as FileSystem from "expo-file-system/legacy";
 import { RecoveryContext } from "@/utils/RecoveryContext";
+import { format } from "date-fns";
 
 export default function Backup() {
   const { items } = useDBFunctions().useFetchAll();
   const recoveryContext = useContext(RecoveryContext);
+  const dateSaved =
+    recoveryContext.savedDate === null
+      ? "Not yet saved"
+      : recoveryContext.savedDate;
 
   //Progress Indicators:
   const [access, setAccess] = useState<boolean>(false);
   const [created, setCreated] = useState<boolean>(false);
   const [written, setWritten] = useState<boolean>(false);
 
-  const btn1Title = written ? "Backup Complete" : "Backup Database";
+  const btn1Title = written ? "Save Complete" : "Save Menu";
   const btn1Color = written ? "#6dc491" : "#060a31";
 
   async function createFile(directory: string) {
@@ -66,6 +71,7 @@ export default function Backup() {
 
   async function writeFile(fileUri: string) {
     const jsonData = JSON.stringify(items);
+    const saveDate = format(new Date(), "dd/MM/yy hh:mm a");
 
     try {
       await FileSystem.StorageAccessFramework.writeAsStringAsync(
@@ -74,6 +80,7 @@ export default function Backup() {
         { encoding: FileSystem.EncodingType.UTF8 }
       ).then(() => {
         setWritten(true);
+        recoveryContext.setSaved(saveDate);
       });
     } catch (error) {
       Alert.alert("Error writing to file!");
@@ -107,7 +114,7 @@ export default function Backup() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.subHeading}>BACKUP MENU TO STORAGE:</Text>
+      <Text style={styles.subHeading}>SAVE MENU TO STORAGE:</Text>
 
       <View style={{ marginTop: 10, marginBottom: 20 }}>
         {access && <ProgressRow description="Permissions granted:" />}
@@ -125,6 +132,8 @@ export default function Backup() {
       >
         <Text style={styles.btnText}>{btn1Title}</Text>
       </Pressable>
+
+      <Text style={styles.date}>LAST SAVED: {dateSaved}</Text>
     </View>
   );
 }
@@ -161,5 +170,9 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: 600,
+  },
+  date: {
+    color: "#333",
+    fontSize: 14,
   },
 });
