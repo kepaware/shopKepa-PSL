@@ -1,14 +1,19 @@
 import Backup from "@/components/Backup";
 import Restore from "@/components/Restore";
 import DocsModal from "@/components/modals/DocsModal";
-import { Text, StyleSheet, Pressable, View } from "react-native";
+import { Text, Linking, StyleSheet, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
+import { Link } from "expo-router";
 
 export default function Recovery() {
   const insets = useSafeAreaInsets();
   const [showModal, setShowModal] = useState(false);
+
+  // async function clearPermissions() {
+  //   Linking.openSettings();
+  // }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -28,6 +33,14 @@ export default function Recovery() {
       <Restore />
       <View style={styles.separator}></View>
 
+      <Pressable
+        style={styles.permissionsBtn}
+        onPress={() => Linking.openSettings()}
+      >
+        <Text style={styles.btnText}>Clear Permissions</Text>
+      </Pressable>
+
+      {/* <View style={styles.separator}></View> */}
       <DocsModal showModal={showModal} setShowModal={setShowModal} />
     </View>
   );
@@ -47,10 +60,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 700,
   },
-  submitBtn: {
+  permissionsBtn: {
+    marginTop: 10,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
+    backgroundColor: "#e00913",
   },
   btnText: {
     color: "#fff",

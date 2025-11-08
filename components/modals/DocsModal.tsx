@@ -14,8 +14,13 @@ import {
   overviewTxt1,
   overviewTxt2,
   overviewTxt3,
+  overviewTxt4,
   permissionsTxt1,
   permissionsTxt2,
+  permissionsTxt3,
+  permissionsTxt4,
+  permissionsTxt5,
+  permissionsTxt6,
   savingTxt1,
   savingTxt2,
   savingTxt3,
@@ -62,9 +67,14 @@ export default function DocsModal({ showModal, setShowModal }: ModalProps) {
           <Text style={styles.textStyle}>{overviewTxt1}</Text>
           <Text style={styles.textStyle}>{overviewTxt2}</Text>
           <Text style={styles.textStyle}>{overviewTxt3}</Text>
+          <Text style={styles.textStyle}>{overviewTxt4}</Text>
           <Text style={styles.heading}>PERMISSIONS:</Text>
           <Text style={styles.textStyle}>{permissionsTxt1}</Text>
           <Text style={styles.textStyle}>{permissionsTxt2}</Text>
+          <Text style={styles.textStyle}>{permissionsTxt3}</Text>
+          <Text style={styles.textStyle}>{permissionsTxt4}</Text>
+          <Text style={styles.textStyle}>{permissionsTxt5}</Text>
+          <Text style={styles.textStyle}>{permissionsTxt6}</Text>
           <Text style={styles.heading}>SAVING YOUR MENU:</Text>
           <Text style={styles.textStyle}>{savingTxt1}</Text>
           <Text style={styles.textStyle}>{savingTxt2}</Text>
