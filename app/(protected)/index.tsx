@@ -1,4 +1,3 @@
-// import * as Font from "expo-font";
 import ItemModal from "@/components/modals/ItemModal";
 import MainDocsModal from "@/components/modals/MainDocsModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
