@@ -25,6 +25,9 @@ export default function MenuScreen() {
     <View
       style={[styles.container, { paddingTop: insets.top, paddingBottom: 6 }]}
     >
+      <Text style={styles.title}>Menu Items:</Text>
+      <View style={styles.line}></View>
+
       <FlatList
         contentContainerStyle={{
           marginTop: 10,
@@ -58,6 +61,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 600,
     color: "blue",
+  },
+  title: {
+    marginTop: 20,
+    fontSize: 18,
+    fontWeight: 600,
+    color: "darkblue",
+  },
+  line: {
+    marginTop: 12,
+    borderBottomColor: "darkblue",
+    borderBottomWidth: 1,
+    width: "88%",
   },
   message: {
     marginTop: 30,

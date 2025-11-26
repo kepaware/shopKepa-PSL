@@ -16,47 +16,52 @@ import {
   overviewTxt2,
   overviewTxt3,
   overviewTxt4,
-  permissionsTxt1,
-  permissionsTxt2,
-  permissionsTxt3,
-  permissionsTxt4,
-  permissionsTxt5,
-  permissionsTxt6,
-  savingTxt1,
-  savingTxt2,
-  savingTxt3,
-  savingTxt4,
-  restoreTxt1,
-  restoreTxt2,
-  restoreTxt3,
-  restoreTxt4,
-  restoreTxt5,
-} from "@/utils/DocsText";
+  recoveryTxt1,
+  uninstallTxt1,
+  uninstallTxt2,
+  uninstallTxt3,
+  uninstallTxt4,
+  uninstallTxt5,
+  uninstallTxt6,
+  uninstallTxt7,
+  uninstallTxt8,
+  uninstallTxt9,
+  uninstallTxt10,
+  contactTxt1,
+  contactTxt2,
+} from "@/utils/MainDocsText";
 
 type ModalProps = {
-  showModal: boolean;
-  setShowModal: React.Dispatch<SetStateAction<boolean>>;
+  showDocsModal: boolean;
+  setShowDocsModal: React.Dispatch<SetStateAction<boolean>>;
 };
 
-export default function DocsModal({ showModal, setShowModal }: ModalProps) {
+type OffsetProps = {
+  y: number;
+};
+
+export default function MainDocsModal({
+  showDocsModal,
+  setShowDocsModal,
+}: ModalProps) {
   const insets = useSafeAreaInsets();
 
   return (
     <Modal
       animationType="fade"
       transparent={false}
-      visible={showModal}
-      onRequestClose={() => setShowModal(false)}
+      visible={showDocsModal}
+      onRequestClose={() => setShowDocsModal(false)}
     >
       <>
         <View style={[styles.topSection, { paddingTop: insets.top }]}>
-          <Text style={styles.title}>DOCUMENTATION:</Text>
+          <Text style={styles.title}>ABOUT SHOPKEPA:</Text>
           <Pressable
             style={{
               marginTop: 8,
               marginRight: 10,
             }}
-            onPress={() => setShowModal(false)}
+            onPress={() => setShowDocsModal(false)}
           >
             <Ionicons name="close-circle" color="darkred" size={26} />
           </Pressable>
@@ -75,26 +80,22 @@ export default function DocsModal({ showModal, setShowModal }: ModalProps) {
             <Text style={styles.textStyle}>{overviewTxt2}</Text>
             <Text style={styles.textStyle}>{overviewTxt3}</Text>
             <Text style={styles.textStyle}>{overviewTxt4}</Text>
-
-            <Text style={styles.heading}>PERMISSIONS:</Text>
-            <Text style={styles.textStyle}>{permissionsTxt1}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt2}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt3}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt4}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt5}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt6}</Text>
-
-            <Text style={styles.heading}>SAVING YOUR MENU:</Text>
-            <Text style={styles.textStyle}>{savingTxt1}</Text>
-            <Text style={styles.textStyle}>{savingTxt2}</Text>
-            <Text style={styles.textStyle}>{savingTxt3}</Text>
-            <Text style={styles.textStyle}>{savingTxt4}</Text>
-            <Text style={styles.heading}>RESTORING YOUR MENU:</Text>
-            <Text style={styles.textStyle}>{restoreTxt1}</Text>
-            <Text style={styles.textStyle}>{restoreTxt2}</Text>
-            <Text style={styles.textStyle}>{restoreTxt3}</Text>
-            <Text style={styles.textStyle}>{restoreTxt4}</Text>
-            <Text style={styles.textStyle}>{restoreTxt5}</Text>
+            <Text style={styles.heading}>RECOVERY:</Text>
+            <Text style={styles.textStyle}>{recoveryTxt1}</Text>
+            <Text style={styles.heading}>UNINSTALLING:</Text>
+            <Text style={styles.textStyle}>{uninstallTxt1}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt2}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt3}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt4}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt5}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt6}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt7}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt8}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt9}</Text>
+            <Text style={styles.textStyle}>{uninstallTxt10}</Text>
+            <Text style={styles.heading}>CONTACT:</Text>
+            <Text style={styles.textStyle}>{contactTxt1}</Text>
+            <Text style={styles.textStyle1a}>{contactTxt2}</Text>
           </View>
         </ScrollView>
       </>
@@ -153,7 +154,16 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     textAlign: "justify",
     lineHeight: 16,
-    // flexWrap: "wrap",
+  },
+  textStyle1a: {
+    marginTop: 0,
+    marginLeft: 20,
+    paddingTop: 0,
+    // marginHorizontal: 10,
+    marginBottom: 8,
+    textAlign: "justify",
+    lineHeight: 16,
+    fontWeight: 700,
   },
   textStyle2: {
     marginTop: 0,

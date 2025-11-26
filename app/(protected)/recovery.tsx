@@ -5,26 +5,25 @@ import { Text, Linking, StyleSheet, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState } from "react";
-import { Link } from "expo-router";
 
 export default function Recovery() {
   const insets = useSafeAreaInsets();
   const [showModal, setShowModal] = useState(false);
 
-  // async function clearPermissions() {
-  //   Linking.openSettings();
-  // }
-
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Pressable
-        style={{ marginLeft: 10, position: "absolute", top: 47, right: 34 }}
-        onPress={() => setShowModal(true)}
-      >
-        <Ionicons name="book" color="blue" size={24} />
-      </Pressable>
+      <View style={styles.topSection}>
+        <Text style={[styles.heading, { marginLeft: 14, marginBottom: 6 }]}>
+          RECOVERY OPTIONS:
+        </Text>
+        <Pressable
+          style={{ marginTop: 20, marginRight: 16 }}
+          onPress={() => setShowModal(true)}
+        >
+          <Ionicons name="book" color="blue" size={24} />
+        </Pressable>
+      </View>
 
-      <Text style={styles.heading}>RECOVERY OPTIONS:</Text>
       <View style={styles.separator}></View>
       <Backup />
 
@@ -47,6 +46,13 @@ export default function Recovery() {
 }
 
 const styles = StyleSheet.create({
+  topSection: {
+    width: "100%",
+    marginHorizontal: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     marginTop: 20,

@@ -17,6 +17,7 @@
       "supportsTablet": true
     },
     "android": {
+      "allowBackup": false,
       "adaptiveIcon": {
         "foregroundImage": "./assets/icons/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -29,11 +30,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-sqlite",
-      "expo-font",
-      "expo-router"
-    ],
+    "plugins": ["expo-sqlite", "expo-font", "expo-router"],
     "extra": {
       "router": {},
       "eas": {

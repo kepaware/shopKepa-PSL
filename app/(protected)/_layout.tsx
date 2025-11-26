@@ -5,7 +5,6 @@ import { Alert } from "react-native";
 import { AuthContext } from "@/utils/authContext";
 import { HapticTab } from "@/components/ui/HapticTab";
 import { MenuProvider } from "@/utils/menuContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Redirect, Tabs } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet } from "react-native";
@@ -23,17 +22,15 @@ export default function TabLayout() {
         .then((results: any) => {
           if (results.length >= 1) {
             //There is an entry in the users table:
-            console.log("A user is registered");
+
             return;
           } else {
             //Specify that user needs to register:
             authState.setRegister();
-            console.log("User needs to register");
           }
         });
     } catch (error) {
       Alert.alert("User check failed");
-      console.log("User check failed: ", error);
     }
   };
 

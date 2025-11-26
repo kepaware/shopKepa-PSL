@@ -4,6 +4,8 @@ import { useContext, useState, useCallback } from "react";
 import { useDBFunctions } from "@/lib/DBUSE";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
+import * as FileSystem from "expo-file-system/legacy";
+import * as SQLite from "expo-sqlite";
 
 import {
   Alert,
@@ -13,6 +15,7 @@ import {
   StyleSheet,
   TextInput,
 } from "react-native";
+import { documentDirectory } from "expo-file-system/legacy";
 
 export default function Login() {
   const authContext = useContext(AuthContext);
@@ -21,6 +24,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showDelBtn, setShowDelBtn] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -29,6 +33,8 @@ export default function Login() {
   const [myPin, setMyPin] = useState("");
 
   const inputMargins = emailError ? 8 : 20;
+
+  const DB_NAME = "shopkepa.db";
 
   const debounceEmail = useDebouncedCallback((newText) => {
     validateEmail(newText);
@@ -100,6 +106,25 @@ export default function Login() {
     } else {
       setAuthError("Invalid Credentials!");
       setLoading(false);
+    }
+  }
+
+  async function deleteDatabase() {
+    const dbPath = `${FileSystem.documentDirectory}SQLite/${DB_NAME}`;
+    console.log("PATH: ", dbPath);
+
+    //Check that file exists:
+    try {
+      const fileInfo = await FileSystem.getInfoAsync(dbPath);
+
+      if (fileInfo.exists) {
+        await FileSystem.deleteAsync(dbPath);
+        console.log(`Database: ${DB_NAME} deleted successfully`);
+      } else {
+        console.log("File not found!");
+      }
+    } catch (error) {
+      console.log("ERROR: ", error);
     }
   }
 
@@ -230,6 +255,25 @@ export default function Login() {
             Forgot my PIN...
           </Text>
         </Pressable>
+
+        <Pressable onPress={() => setShowDelBtn(true)}>
+          <Text
+            style={{
+              fontSize: 18,
+              color: "#000",
+              fontWeight: 700,
+              marginTop: 30,
+            }}
+          >
+            Uninstalling this application?
+          </Text>
+        </Pressable>
+
+        {showDelBtn && (
+          <Pressable style={styles.deleteBtn} onPress={() => deleteDatabase()}>
+            <Text style={styles.btnText}>Delete Database</Text>
+          </Pressable>
+        )}
       </View>
     );
   }
@@ -290,7 +334,6 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     marginBottom: 20,
   },
-
   errorMessage: {
     fontSize: 18,
     fontWeight: 600,
@@ -303,6 +346,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 6,
     backgroundColor: "darkblue",
+    // marginBottom: 60,
+  },
+  deleteBtn: {
+    marginTop: 30,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: "red",
     // marginBottom: 60,
   },
   btnText: {
