@@ -53,10 +53,6 @@ export default function Restore() {
   }
 
   async function restore() {
-    // 1.  Clear Menu Table:
-    clearTable();
-    setCleared(true);
-
     let fileItemsArray: any;
 
     // 1. Request permissions for the parent directory:
@@ -70,6 +66,7 @@ export default function Restore() {
     } else {
       setAccess(true);
       try {
+        // 1.  Read the file:
         const itemsArray = await readFile(permissions.directoryUri);
 
         if (itemsArray === null) {
@@ -78,6 +75,11 @@ export default function Restore() {
           fileItemsArray = itemsArray;
           setRead(true);
 
+          // 2.  Clear Menu Table:
+          clearTable();
+          setCleared(true);
+
+          // 3. Write the items to the table;
           seedDB({ fileItemsArray });
           setWritten(true);
         }
@@ -94,8 +96,8 @@ export default function Restore() {
 
       <View style={{ marginTop: 10, marginBottom: 20 }}>
         {access && <ProgressRow description="Permissions granted:" />}
-        {cleared && <ProgressRow description="Existing Table Cleared:" />}
         {read && <ProgressRow description="Recovery File Read:" />}
+        {cleared && <ProgressRow description="Existing Table Cleared:" />}
         {written && <ProgressRow description="Menu Items Restored:" />}
       </View>
 

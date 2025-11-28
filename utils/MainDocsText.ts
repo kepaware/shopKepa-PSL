@@ -6,7 +6,7 @@ export const overviewTxt4 = `This app is completely offline, i.e it doesn't requ
 export const recoveryTxt1 = `Your menu items can be backed up, and restored from, your device's internal storage.  Press the "docs" icon on the Recovery page to learn more.`;
 
 export const uninstallTxt1 = `If uninstalling, follow these steps:`;
-export const uninstallTxt2 = `1.  Log Out. This will send you to the "Log In" page.`;
+export const uninstallTxt2 = `1.  Log out. This will send you to the "Log In" page.`;
 export const uninstallTxt3 = `2.  Press the "Uninstalling this application" link.`;
 export const uninstallTxt4 = `3.  Press the "Delete Database" button that appears.`;
 export const uninstallTxt5 = `This will avoid any possibility of the database not being removed when the app is uninstalled.`;
