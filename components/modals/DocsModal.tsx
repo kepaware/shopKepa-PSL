@@ -1,6 +1,7 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRef } from "react";
 
 import {
   Modal,
@@ -12,26 +13,12 @@ import {
 } from "react-native";
 
 import {
-  overviewTxt1,
-  overviewTxt2,
-  overviewTxt3,
-  overviewTxt4,
-  permissionsTxt1,
-  permissionsTxt2,
-  permissionsTxt3,
-  permissionsTxt4,
-  permissionsTxt5,
-  permissionsTxt6,
-  savingTxt1,
-  savingTxt2,
-  savingTxt3,
-  savingTxt4,
-  restoreTxt1,
-  restoreTxt2,
-  restoreTxt3,
-  restoreTxt4,
-  restoreTxt5,
-} from "@/utils/DocsText";
+  overview,
+  permissions,
+  saving,
+  restoring,
+  contact,
+} from "@/utils/DocArrays";
 
 type ModalProps = {
   showModal: boolean;
@@ -40,6 +27,19 @@ type ModalProps = {
 
 export default function DocsModal({ showModal, setShowModal }: ModalProps) {
   const insets = useSafeAreaInsets();
+  const ref = useRef<ScrollView | null>(null);
+  const [overviewY, setOverviewY] = useState<number>(0);
+  const [permissionsY, setPermissionsY] = useState<number>();
+  const [savingY, setSavingY] = useState<number>(0);
+  const [restoringY, setRestoringY] = useState<number>(0);
+  const [contactY, setContactY] = useState<number>(0);
+
+  const viewSection = (position: number) => {
+    console.log("Section: ", permissionsY);
+    console.log("Coords: ", position);
+
+    ref.current!.scrollTo({ y: position + 40, animated: true });
+  };
 
   return (
     <Modal
@@ -50,7 +50,7 @@ export default function DocsModal({ showModal, setShowModal }: ModalProps) {
     >
       <>
         <View style={[styles.topSection, { paddingTop: insets.top }]}>
-          <Text style={styles.title}>DOCUMENTATION:</Text>
+          <Text style={styles.title}>RECOVERY:</Text>
           <Pressable
             style={{
               marginTop: 8,
@@ -63,38 +63,154 @@ export default function DocsModal({ showModal, setShowModal }: ModalProps) {
         </View>
 
         <ScrollView
+          ref={ref}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={[
             styles.container,
             { paddingBottom: insets.bottom + 10 },
           ]}
         >
+          {/* Scroll Links List: */}
           <View style={styles.textContainer}>
-            <Text style={styles.heading}>OVERVIEW:</Text>
-            <Text style={styles.textStyle}>{overviewTxt1}</Text>
-            <Text style={styles.textStyle}>{overviewTxt2}</Text>
-            <Text style={styles.textStyle}>{overviewTxt3}</Text>
-            <Text style={styles.textStyle}>{overviewTxt4}</Text>
+            <View style={{ marginBottom: 4 }}>
+              <Pressable onPress={() => viewSection(overviewY)}>
+                <Text style={styles.link}>1. Overview</Text>
+              </Pressable>
+              <Pressable onPress={() => viewSection(permissionsY!)}>
+                <Text style={styles.link}>2. Permissions</Text>
+              </Pressable>
+              <Pressable onPress={() => viewSection(savingY!)}>
+                <Text style={styles.link}>3. Saving</Text>
+              </Pressable>
+              <Pressable onPress={() => viewSection(restoringY!)}>
+                <Text style={styles.link}>4. Restoring</Text>
+              </Pressable>
+              <Pressable onPress={() => viewSection(contactY!)}>
+                <Text style={styles.link}>5. Contact</Text>
+              </Pressable>
+            </View>
 
-            <Text style={styles.heading}>PERMISSIONS:</Text>
-            <Text style={styles.textStyle}>{permissionsTxt1}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt2}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt3}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt4}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt5}</Text>
-            <Text style={styles.textStyle}>{permissionsTxt6}</Text>
-
-            <Text style={styles.heading}>SAVING YOUR MENU:</Text>
-            <Text style={styles.textStyle}>{savingTxt1}</Text>
-            <Text style={styles.textStyle}>{savingTxt2}</Text>
-            <Text style={styles.textStyle}>{savingTxt3}</Text>
-            <Text style={styles.textStyle}>{savingTxt4}</Text>
-            <Text style={styles.heading}>RESTORING YOUR MENU:</Text>
-            <Text style={styles.textStyle}>{restoreTxt1}</Text>
-            <Text style={styles.textStyle}>{restoreTxt2}</Text>
-            <Text style={styles.textStyle}>{restoreTxt3}</Text>
-            <Text style={styles.textStyle}>{restoreTxt4}</Text>
-            <Text style={styles.textStyle}>{restoreTxt5}</Text>
+            {/* Overview */}
+            {overview.map((item) => {
+              if (item.key === 0) {
+                return (
+                  <Text
+                    style={styles.heading}
+                    key={item.key}
+                    onLayout={(event) => {
+                      const layout = event.nativeEvent.layout;
+                      setOverviewY(layout.y - 40);
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text key={item.key} style={styles.textStyle}>
+                    {item.text}
+                  </Text>
+                );
+              }
+            })}
+            {/* Permissions */}
+            {permissions.map((item) => {
+              if (item.key === 0) {
+                return (
+                  <Text
+                    style={styles.heading}
+                    key={item.key}
+                    onLayout={(event) => {
+                      const layout = event.nativeEvent.layout;
+                      setPermissionsY(layout.y + 20);
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text key={item.key} style={styles.textStyle}>
+                    {item.text}
+                  </Text>
+                );
+              }
+            })}
+            {/* Saving: */}
+            {saving.map((item) => {
+              if (item.key === 0) {
+                return (
+                  <Text
+                    style={styles.heading}
+                    key={item.key}
+                    onLayout={(event) => {
+                      const layout = event.nativeEvent.layout;
+                      setSavingY(layout.y);
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text key={item.key} style={styles.textStyle}>
+                    {item.text}
+                  </Text>
+                );
+              }
+            })}
+            {/* Restoring: */}
+            {restoring.map((item) => {
+              if (item.key === 0) {
+                return (
+                  <Text
+                    style={styles.heading}
+                    key={item.key}
+                    onLayout={(event) => {
+                      const layout = event.nativeEvent.layout;
+                      setRestoringY(layout.y);
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text key={item.key} style={styles.textStyle}>
+                    {item.text}
+                  </Text>
+                );
+              }
+            })}
+            {/* Contact: */}
+            {contact.map((item) => {
+              if (item.key === 0) {
+                return (
+                  <Text
+                    style={styles.heading}
+                    key={item.key}
+                    onLayout={(event) => {
+                      const layout = event.nativeEvent.layout;
+                      setContactY(layout.y);
+                    }}
+                  >
+                    {item.text}
+                  </Text>
+                );
+              } else if (item.key === 20) {
+                return (
+                  <Text key={item.key} style={styles.email}>
+                    {item.text}
+                  </Text>
+                );
+              } else {
+                return (
+                  <Text key={item.key} style={styles.textStyle}>
+                    {item.text}
+                  </Text>
+                );
+              }
+            })}
           </View>
         </ScrollView>
       </>
@@ -118,7 +234,7 @@ const styles = StyleSheet.create({
     gap: 0,
   },
   textContainer: {
-    marginBottom: 20,
+    marginBottom: 30,
     flexGrow: 1,
     width: "100%",
     flexDirection: "column",
@@ -127,6 +243,7 @@ const styles = StyleSheet.create({
     gap: 0,
     flexWrap: "wrap",
   },
+  link: { marginVertical: 6, color: "#491ab8", fontSize: 16, fontWeight: 700 },
   linkText: {
     marginVertical: 6,
     fontSize: 16,
@@ -161,6 +278,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     textAlign: "justify",
     lineHeight: 16,
+  },
+  email: {
+    color: "#491ab8",
+    fontSize: 14,
+    fontWeight: 700,
   },
   lineSpace: {
     lineHeight: 8,
