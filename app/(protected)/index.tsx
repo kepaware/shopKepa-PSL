@@ -60,12 +60,12 @@ export default function HomeScreen() {
         <Text style={styles.copyright}>by kepaWare</Text>
       </View>
 
-      <View style={{ marginTop: 40, flexDirection: "row", gap: 14 }}>
-        <View style={{ width: 60, justifyContent: "flex-start" }}>
-          <Text style={styles.statsText}>Menu:</Text>
+      <View style={{ marginTop: 50, flexDirection: "row", gap: 14 }}>
+        <View style={{ width: 62, justifyContent: "center" }}>
+          <Text style={styles.statsText}>MENU:</Text>
         </View>
 
-        <View style={{ width: 40, justifyContent: "flex-end" }}>
+        <View style={{ width: 20, justifyContent: "flex-end" }}>
           <Text style={styles.statsText}>{items!.length}</Text>
         </View>
       </View>
@@ -137,8 +137,8 @@ const styles = StyleSheet.create({
     bottom: 340,
   },
   statsText: {
-    fontSize: 20,
-    fontWeight: 600,
+    fontSize: 18,
+    fontWeight: 700,
   },
   link: {
     position: "absolute",

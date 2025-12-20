@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
     width: "88%",
     height: 32,
     justifyContent: "center",
-    // backgroundColor: "#999",
   },
   label: {
     fontSize: 16,
@@ -64,6 +63,5 @@ const styles = StyleSheet.create({
     height: 32,
     alignItems: "flex-start",
     justifyContent: "flex-end",
-    // backgroundColor: "#333",
   },
 });

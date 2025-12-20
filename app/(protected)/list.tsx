@@ -112,7 +112,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "center",
-    // backgroundColor: "#e3d9ec",
     backgroundColor: "#ddd",
   },
   heading: {

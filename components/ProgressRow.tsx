@@ -1,5 +1,5 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Alert, Text, StyleSheet, View, Pressable } from "react-native";
+import { Text, View } from "react-native";
 
 type Props = {
   description: string;

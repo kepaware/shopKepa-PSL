@@ -5,12 +5,6 @@ import { useDBFunctions } from "@/lib/DBUSE";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/utils/authContext";
 
-type User = {
-  id: string;
-  email: string;
-  username: string;
-};
-
 export default function Account() {
   const authContext = useContext(AuthContext);
   const insets = useSafeAreaInsets();
@@ -81,13 +75,11 @@ const styles = StyleSheet.create({
   rowTitle: {
     fontSize: 16,
     fontWeight: 700,
-    // backgroundColor: "#555",
   },
   rowValue: {
     fontSize: 16,
     fontWeight: 600,
     color: "#000",
-    // backgroundColor: "#777",
   },
   changeBtn: {
     marginTop: 30,

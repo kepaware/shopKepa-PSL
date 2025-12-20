@@ -1,6 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import ConfirmDeleteModal from "./modals/ConfirmDeleteModal";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useDBFunctions } from "@/lib/DBUSE";
+import { useState } from "react";
 
 type ItemProps = {
   id: number;
@@ -12,7 +14,8 @@ type ItemProps = {
 
 export default function MenuRow({ id, label, list }: ItemProps) {
   const { toggleList } = useDBFunctions().useToggleItem();
-  const { deleteMenuItem } = useDBFunctions().useDeleteItem();
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   function handleToggle() {
     let item = {
@@ -25,9 +28,9 @@ export default function MenuRow({ id, label, list }: ItemProps) {
   return (
     <View style={styles.row}>
       <View style={styles.deleteSection}>
-        <TouchableOpacity onPress={() => deleteMenuItem(id)}>
+        <Pressable onPress={() => setShowDeleteModal(true)}>
           <MaterialIcons name="delete" color="#666" size={22} />
-        </TouchableOpacity>
+        </Pressable>
       </View>
 
       <View style={styles.labelSection}>
@@ -35,7 +38,7 @@ export default function MenuRow({ id, label, list }: ItemProps) {
       </View>
 
       <View style={styles.actionSection}>
-        <TouchableOpacity onPress={handleToggle}>
+        <Pressable onPress={handleToggle}>
           {list ? (
             <MaterialIcons
               name="remove-circle-outline"
@@ -51,8 +54,15 @@ export default function MenuRow({ id, label, list }: ItemProps) {
               style={{ marginTop: 6 }}
             />
           )}
-        </TouchableOpacity>
+        </Pressable>
       </View>
+
+      <ConfirmDeleteModal
+        id={id}
+        label={label}
+        showDeleteModal={showDeleteModal}
+        setShowDeleteModal={setShowDeleteModal}
+      />
     </View>
   );
 }
@@ -61,7 +71,6 @@ const styles = StyleSheet.create({
   row: {
     width: "98%",
     height: 38,
-    // marginVertical: 2,
     flexDirection: "row",
     alignItems: "center",
   },
@@ -70,13 +79,11 @@ const styles = StyleSheet.create({
     height: 34,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "#333",
   },
   labelSection: {
     width: "78%",
     height: 34,
     justifyContent: "center",
-    // backgroundColor: "#999",
   },
   label: {
     fontSize: 16,
@@ -88,6 +95,5 @@ const styles = StyleSheet.create({
     height: 34,
     alignItems: "flex-start",
     justifyContent: "center",
-    // backgroundColor: "#333",
   },
 });

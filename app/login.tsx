@@ -1,21 +1,12 @@
 import PasswordModal from "@/components/modals/PasswordModal";
 import { AuthContext } from "@/utils/authContext";
-import { useContext, useState, useCallback } from "react";
+import { useContext, useState } from "react";
 import { useDBFunctions } from "@/lib/DBUSE";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 import * as FileSystem from "expo-file-system/legacy";
-import * as SQLite from "expo-sqlite";
 
-import {
-  Alert,
-  Pressable,
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-} from "react-native";
-import { documentDirectory } from "expo-file-system/legacy";
+import { Pressable, View, Text, StyleSheet, TextInput } from "react-native";
 
 export default function Login() {
   const authContext = useContext(AuthContext);
@@ -225,6 +216,7 @@ export default function Login() {
         <View style={[{ flexDirection: "column", marginTop: 40 }]}>
           <Text style={[styles.inputTitle]}>4-Digit PIN:</Text>
           <TextInput
+            autoFocus
             showSoftInputOnFocus={true}
             keyboardType="numeric"
             style={[styles.textPINInput]}

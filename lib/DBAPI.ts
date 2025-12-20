@@ -1,5 +1,6 @@
 import { useSQLiteContext } from "expo-sqlite";
 import type { User, Item, Update, AddProps, SeedArray, Toggle } from "./Types";
+import { Alert } from "react-native";
 
 export function useDatabase() {
   const db = useSQLiteContext();
@@ -9,7 +10,7 @@ export function useDatabase() {
       const user = await db.getFirstAsync<User>("SELECT * FROM shopusers");
       return user;
     } catch (error) {
-      console.error("getUser failed: ", error);
+      Alert.alert("Failed to get user");
     }
   }
 
@@ -23,7 +24,7 @@ export function useDatabase() {
       );
       return data.changes;
     } catch (error) {
-      console.log("ToggleError: ", error);
+      Alert.alert("Update Error");
     }
   }
 
@@ -54,11 +55,10 @@ export function useDatabase() {
         userID
       );
 
-      console.log("Item Changes: ", data.changes);
       return data.changes;
     } catch (error: any) {
       console.log("ItemError: ", error);
-      // Alert.alert("AddItemError: ", error);
+      Alert.alert("AddItemError: ", error);
     }
   };
 
@@ -84,7 +84,7 @@ export function useDatabase() {
         id
       );
     } catch (error) {
-      console.log("DeleteError: ", error);
+      Alert.alert("Delete Error: ");
     }
   };
 
@@ -92,7 +92,7 @@ export function useDatabase() {
     try {
       await db.runAsync(`DELETE FROM items`);
     } catch (error) {
-      console.log("DeleteError: ", error);
+      Alert.alert("Error clearing table...");
     }
   };
 
@@ -108,7 +108,7 @@ export function useDatabase() {
         );
       });
     } catch (error) {
-      console.log("Seed Error: ", error);
+      Alert.alert("Error seeding database");
     }
   };
 

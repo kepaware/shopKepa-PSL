@@ -22,7 +22,6 @@ export default function TabLayout() {
         .then((results: any) => {
           if (results.length >= 1) {
             //There is an entry in the users table:
-
             return;
           } else {
             //Specify that user needs to register:

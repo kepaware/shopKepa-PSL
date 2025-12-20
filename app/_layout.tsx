@@ -24,8 +24,6 @@ const createDBIfNeeded = async (db: SQLiteDatabase) => {
           CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, category TEXT, list BOOL, user_id INTEGER);
         `
     );
-
-    // console.log("DB shopkepa.db created/exists");
   } catch (error) {
     console.error("Error creating database: ", error);
     createDBError = true;

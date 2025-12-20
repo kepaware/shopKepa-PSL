@@ -38,7 +38,7 @@ export default function Register() {
           authContext.logIn();
         });
     } catch (error) {
-      console.log("ERROR: ", error);
+      Alert.alert("ERROR REGISTERING... ");
     }
   }
 
@@ -55,7 +55,6 @@ export default function Register() {
 
       <View
         style={{
-          // marginBottom: 20,
           width: "70%",
           flexDirection: "row",
           gap: 30,
@@ -178,16 +177,13 @@ const styles = StyleSheet.create({
   submitSection: {
     width: "100%",
     marginTop: 20,
-    // justifyContent: "center",
     alignItems: "center",
   },
   submitBtn: {
-    // width: 160,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 6,
     backgroundColor: "darkblue",
-    // marginBottom: 60,
   },
   btnText: {
     color: "#fff",

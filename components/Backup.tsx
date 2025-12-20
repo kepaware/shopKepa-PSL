@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     alignItems: "center",
     justifyContent: "flex-start",
-    // backgroundColor: "#777",
   },
   heading: {
     marginTop: 20,
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontSize: 16,
     fontWeight: 700,
-    color: "blue",
+    color: "#333",
   },
   submitBtn: {
     paddingVertical: 8,

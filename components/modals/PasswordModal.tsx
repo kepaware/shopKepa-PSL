@@ -25,7 +25,6 @@ export default function PasswordModal({ showModal, setShowModal }: ModalProps) {
   const [error, setError] = useState("");
   const { isPending, user } = useDBFunctions().useGetUser();
   let btnText = myPassword !== "" ? myPassword : "Retrieve Password";
-  // let btnTextColor = myPassword !== "" ? "##f3ac7d" : "#fff";
   let btnTextColor = "#fff";
 
   function clearFields() {
@@ -36,7 +35,6 @@ export default function PasswordModal({ showModal, setShowModal }: ModalProps) {
   }
 
   function retrievePassword(id: number) {
-    console.log("User: ", user);
     const { email, password, username } = user!;
     const checkEmail = email === myEmail ? true : false;
     const checkUsername = username === myUsername ? true : false;
@@ -155,8 +153,6 @@ const styles = StyleSheet.create({
     width: "70%",
     flex: 1,
     justifyContent: "flex-start",
-    // marginBottom: 20,
-    // backgroundColor: "#ddd",
   },
   inputTitle: {
     fontSize: 14,
@@ -179,7 +175,6 @@ const styles = StyleSheet.create({
   submitSection: {
     width: "100%",
     marginTop: 20,
-    // justifyContent: "center",
     alignItems: "center",
   },
   submitBtn: {

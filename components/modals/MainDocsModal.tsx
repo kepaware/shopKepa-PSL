@@ -1,4 +1,4 @@
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -11,33 +11,11 @@ import {
   Pressable,
 } from "react-native";
 
-import {
-  overviewTxt1,
-  overviewTxt2,
-  overviewTxt3,
-  overviewTxt4,
-  recoveryTxt1,
-  uninstallTxt1,
-  uninstallTxt2,
-  uninstallTxt3,
-  uninstallTxt4,
-  uninstallTxt5,
-  uninstallTxt6,
-  uninstallTxt7,
-  uninstallTxt8,
-  uninstallTxt9,
-  uninstallTxt10,
-  contactTxt1,
-  contactTxt2,
-} from "@/utils/MainDocsText";
+import { mainOverview, recovery, uninstall, contact } from "@/utils/DocArrays";
 
 type ModalProps = {
   showDocsModal: boolean;
   setShowDocsModal: React.Dispatch<SetStateAction<boolean>>;
-};
-
-type OffsetProps = {
-  y: number;
 };
 
 export default function MainDocsModal({
@@ -45,6 +23,13 @@ export default function MainDocsModal({
   setShowDocsModal,
 }: ModalProps) {
   const insets = useSafeAreaInsets();
+  const [section, setSection] = useState("overview");
+
+  //Link Colors:
+  const linkOV = section === "overview" ? "blue" : "#555";
+  const linkRec = section === "recovery" ? "blue" : "#555";
+  const linkRem = section === "uninstall" ? "blue" : "#555";
+  const linkCon = section === "contact" ? "blue" : "#555";
 
   return (
     <Modal
@@ -55,7 +40,9 @@ export default function MainDocsModal({
     >
       <>
         <View style={[styles.topSection, { paddingTop: insets.top }]}>
-          <Text style={styles.title}>ABOUT SHOPKEPA:</Text>
+          <Text style={[styles.title, { paddingLeft: 4 }]}>
+            ABOUT SHOPKEPA:
+          </Text>
           <Pressable
             style={{
               marginTop: 8,
@@ -63,39 +50,152 @@ export default function MainDocsModal({
             }}
             onPress={() => setShowDocsModal(false)}
           >
-            <Ionicons name="close-circle" color="darkred" size={26} />
+            <Ionicons name="close-circle" color="#333" size={26} />
           </Pressable>
         </View>
 
         <ScrollView
           showsVerticalScrollIndicator={false}
+          alwaysBounceVertical={false}
+          bounces={false}
           contentContainerStyle={[
             styles.container,
             { paddingBottom: insets.bottom + 10 },
           ]}
         >
           <View style={styles.textContainer}>
-            <Text style={styles.heading}>OVERVIEW:</Text>
-            <Text style={styles.textStyle}>{overviewTxt1}</Text>
-            <Text style={styles.textStyle}>{overviewTxt2}</Text>
-            <Text style={styles.textStyle}>{overviewTxt3}</Text>
-            <Text style={styles.textStyle}>{overviewTxt4}</Text>
-            <Text style={styles.heading}>RECOVERY:</Text>
-            <Text style={styles.textStyle}>{recoveryTxt1}</Text>
-            <Text style={styles.heading}>UNINSTALLING:</Text>
-            <Text style={styles.textStyle}>{uninstallTxt1}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt2}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt3}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt4}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt5}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt6}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt7}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt8}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt9}</Text>
-            <Text style={styles.textStyle}>{uninstallTxt10}</Text>
-            <Text style={styles.heading}>CONTACT:</Text>
-            <Text style={styles.textStyle}>{contactTxt1}</Text>
-            <Text style={styles.textStyle1a}>{contactTxt2}</Text>
+            <View style={{ marginBottom: 4 }}>
+              <View style={styles.linkRow}>
+                <Pressable onPress={() => setSection("overview")}>
+                  <Text
+                    style={[
+                      styles.link,
+                      { width: 120, color: `${linkOV}`, paddingLeft: 4 },
+                    ]}
+                  >
+                    OVERVIEW
+                  </Text>
+                </Pressable>
+                <Pressable onPress={() => setSection("recovery")}>
+                  <Text style={[styles.link, { color: `${linkRec}` }]}>
+                    RECOVERY
+                  </Text>
+                </Pressable>
+              </View>
+
+              <View style={styles.linkRow}>
+                <Pressable onPress={() => setSection("uninstall")}>
+                  <Text
+                    style={[
+                      styles.link,
+                      { width: 120, color: `${linkRem}`, paddingLeft: 4 },
+                    ]}
+                  >
+                    UNINSTALLING
+                  </Text>
+                </Pressable>
+                <Pressable onPress={() => setSection("contact")}>
+                  <Text style={[styles.link, { color: `${linkCon}` }]}>
+                    CONTACT
+                  </Text>
+                </Pressable>
+              </View>
+            </View>
+
+            <View
+              style={{
+                marginVertical: 20,
+                borderColor: "#ccc",
+                width: "93%",
+                borderWidth: 0.5,
+              }}
+            />
+
+            {section === "overview" && (
+              <View style={styles.textContainer}>
+                {mainOverview.map((item) => {
+                  if (item.key === 0) {
+                    return (
+                      <Text style={styles.heading} key={item.key}>
+                        {item.text}
+                      </Text>
+                    );
+                  } else {
+                    return (
+                      <Text key={item.key} style={styles.textStyle}>
+                        {item.text}
+                      </Text>
+                    );
+                  }
+                })}
+              </View>
+            )}
+
+            {section === "recovery" && (
+              <View style={styles.textContainer}>
+                {recovery.map((item) => {
+                  if (item.key === 0) {
+                    return (
+                      <Text style={styles.heading} key={item.key}>
+                        {item.text}
+                      </Text>
+                    );
+                  } else {
+                    return (
+                      <Text key={item.key} style={styles.textStyle}>
+                        {item.text}
+                      </Text>
+                    );
+                  }
+                })}
+              </View>
+            )}
+
+            {section === "uninstall" && (
+              <View style={styles.textContainer}>
+                {uninstall.map((item) => {
+                  if (item.key === 0) {
+                    return (
+                      <Text style={styles.heading} key={item.key}>
+                        {item.text}
+                      </Text>
+                    );
+                  } else {
+                    return (
+                      <Text key={item.key} style={styles.textStyle}>
+                        {item.text}
+                      </Text>
+                    );
+                  }
+                })}
+              </View>
+            )}
+
+            {section === "contact" && (
+              <View style={styles.textContainer}>
+                {contact.map((item) => {
+                  if (item.key === 0) {
+                    return (
+                      <Text style={styles.heading} key={item.key}>
+                        {item.text}
+                      </Text>
+                    );
+                  } else if (item.key === 20) {
+                    return (
+                      <Text key={item.key} style={styles.email}>
+                        {item.text}
+                      </Text>
+                    );
+                  } else {
+                    return (
+                      <Text key={item.key} style={styles.textStyle}>
+                        {item.text}
+                      </Text>
+                    );
+                  }
+                })}
+              </View>
+            )}
           </View>
         </ScrollView>
       </>
@@ -128,11 +228,18 @@ const styles = StyleSheet.create({
     gap: 0,
     flexWrap: "wrap",
   },
+  linkRow: { flexDirection: "row", alignItems: "center", gap: 50 },
+  link: { marginVertical: 6, fontSize: 15, fontWeight: 700 },
   linkText: {
     marginVertical: 6,
     fontSize: 16,
     color: "#093be2",
     textDecorationLine: "underline",
+  },
+  email: {
+    color: "#491ab8",
+    fontSize: 14,
+    fontWeight: 700,
   },
   title: {
     fontSize: 18,
