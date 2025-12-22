@@ -17,6 +17,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showDelBtn, setShowDelBtn] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [pinError, setPinError] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [emailError, setEmailError] = useState<string | null>(null);
   const [pwError, setPwError] = useState<string | null>(null);
@@ -51,11 +52,11 @@ export default function Login() {
   function validatePassword(newText: string) {
     const valid = newText.length >= 8 ? true : false;
 
-    if (!valid) {
-      setPwError("Must be at least 8 characters");
-    } else {
+    if (valid) {
       setPassword(newText);
       setPwError(null);
+    } else {
+      setPwError("Password must >= 8 characters!");
     }
   }
 
@@ -74,15 +75,37 @@ export default function Login() {
   }
 
   async function signInWithPin() {
-    setLoading(true);
+    const regex = /^[Z0-9]+$/;
+    const validLength = myPin.length === 4 ? true : false;
     const truePIN = user?.pin;
     const verifiedPin = Number(myPin) === truePIN ? true : false;
+    let isValid = false;
 
-    if (verifiedPin) {
+    setLoading(true);
+
+    Array.from(myPin).forEach((char) => {
+      const result = regex.test(char);
+
+      if (result) {
+        isValid = true;
+      }
+
+      if (!result || !validLength) {
+        setAuthError("Must be 4 numerals!");
+        setPinError(true);
+      }
+
+      if (!verifiedPin) {
+        setAuthError("Incorrect PIN!");
+      }
+    });
+
+    if (isValid && validLength && verifiedPin) {
       setLoading(false);
       authContext.logIn();
     } else {
       setAuthError("Invalid PIN!");
+      setPinError(true);
       setLoading(false);
     }
   }
@@ -230,9 +253,17 @@ export default function Login() {
         </View>
 
         <View style={styles.submitSection}>
-          <Pressable onPress={() => signInWithPin()} style={styles.submitBtn}>
-            <Text style={styles.btnText}>Submit PIN</Text>
-          </Pressable>
+          {!pinError && (
+            <Pressable onPress={() => signInWithPin()} style={styles.submitBtn}>
+              <Text style={styles.btnText}>Submit PIN</Text>
+            </Pressable>
+          )}
+
+          {pinError && (
+            <Pressable onPress={() => setMyPin("")} style={styles.submitBtn}>
+              <Text style={styles.btnText}>Try again!</Text>
+            </Pressable>
+          )}
         </View>
 
         <Pressable onPress={() => setEmailLogin(true)}>

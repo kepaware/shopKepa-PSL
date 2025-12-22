@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, KeyboardEvent } from "react";
 import { AuthContext } from "@/utils/authContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSQLiteContext } from "expo-sqlite";
@@ -21,24 +21,122 @@ export default function Register() {
   const [myPin, setMyPin] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [nameError, setNameError] = useState("");
+  const [pinError, setPinError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState(false);
+
+  const reset = () => {
+    setName("");
+    setMyPin("");
+    setNewEmail("");
+    setNewPassword("");
+    setNameError("");
+    setPinError("");
+    setEmailError("");
+    setPasswordError("");
+    setError(false);
+  };
+
+  function validateName() {
+    const regex = /^[a-zA-Z0-9 -]+$/;
+    const validLength = newPassword.length >= 2 ? true : false;
+
+    let isError = false;
+
+    Array.from(name).forEach((char) => {
+      const result = regex.test(char);
+      console.log("Result: ", result);
+
+      if (!result) {
+        isError = true;
+      }
+    });
+
+    if (isError) {
+      setNameError("Name contains invalid characters!");
+      setError(true);
+      return false;
+    } else if (!isError && !validLength) {
+      setNameError("Name must be 2 characters or more");
+      setError(true);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function validatePIN() {
+    const regex = /^[Z0-9]+$/;
+    const validLength = myPin.length === 4 ? true : false;
+
+    let isError = false;
+
+    Array.from(myPin).forEach((char) => {
+      const result = regex.test(char);
+
+      if (!result) {
+        isError = true;
+      }
+    });
+
+    if (isError || !validLength) {
+      setPinError("PIN must be 4 numerals!");
+      setError(true);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function validateEmail() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(newEmail)) {
+      setEmailError("Valid email address required!");
+      setError(true);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  function validatePassword() {
+    if (newPassword.length >= 8) {
+      return true;
+    } else {
+      setPasswordError("Must be 8 characters or more!");
+      setError(true);
+      return false;
+    }
+  }
+
   async function signUpWithEmail() {
     const newPIN = Number(myPin);
+    const validName = validateName();
+    const validPIN = validatePIN();
+    const validEmail = validateEmail();
+    const validPassword = validatePassword();
 
-    try {
-      await db
-        .runAsync(
-          "INSERT INTO shopusers (username, pin, email, password) VALUES (?, ?, ?, ?)",
-          name,
-          newPIN,
-          newEmail,
-          newPassword
-        )
-        .then(() => {
-          authContext.deRegister();
-          authContext.logIn();
-        });
-    } catch (error) {
-      Alert.alert("ERROR REGISTERING... ");
+    if (validName && validPIN && validEmail && validPassword) {
+      console.log("All fields validated");
+      try {
+        await db
+          .runAsync(
+            "INSERT INTO shopusers (username, pin, email, password) VALUES (?, ?, ?, ?)",
+            name,
+            newPIN,
+            newEmail,
+            newPassword
+          )
+          .then(() => {
+            authContext.deRegister();
+            authContext.logIn();
+          });
+      } catch (error) {
+        Alert.alert("ERROR REGISTERING... ");
+      }
     }
   }
 
@@ -88,6 +186,8 @@ export default function Register() {
           />
         </View>
       </View>
+      {nameError && <Text style={styles.errorText}>{nameError}</Text>}
+      {pinError && <Text style={styles.errorText}>{pinError}</Text>}
 
       <View style={styles.inputSection}>
         <Text style={styles.inputTitle}>Email:</Text>
@@ -99,6 +199,8 @@ export default function Register() {
           autoCapitalize="none"
         />
 
+        {emailError && <Text style={styles.errorText}>{emailError}</Text>}
+
         <Text style={styles.inputTitle}>Password:</Text>
         <TextInput
           style={styles.textInput}
@@ -109,10 +211,26 @@ export default function Register() {
           onChangeText={(newText) => setNewPassword(newText)}
         />
 
+        {passwordError && <Text style={styles.errorText}>{passwordError}</Text>}
+
         <View style={styles.submitSection}>
-          <Pressable onPress={() => signUpWithEmail()} style={styles.submitBtn}>
-            <Text style={styles.btnText}>Register New User</Text>
-          </Pressable>
+          {!error && (
+            <Pressable
+              onPress={() => signUpWithEmail()}
+              style={styles.submitBtn}
+            >
+              <Text style={styles.btnText}>Register New User</Text>
+            </Pressable>
+          )}
+
+          {error && (
+            <Pressable
+              onPress={() => reset()}
+              style={[styles.submitBtn, { marginTop: 24 }]}
+            >
+              <Text style={styles.btnText}>Clear fields and try again!</Text>
+            </Pressable>
+          )}
         </View>
       </View>
     </View>
@@ -189,5 +307,11 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: 600,
+  },
+  errorText: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "red",
+    marginBottom: 10,
   },
 });
