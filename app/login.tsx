@@ -42,6 +42,12 @@ export default function Login() {
     setEmailLogin(true);
   };
 
+  const reset = () => {
+    setMyPin("");
+    setPinError(false);
+    setAuthError(null);
+  };
+
   function validateEmail(newText: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -266,7 +272,7 @@ export default function Login() {
           )}
 
           {pinError && (
-            <Pressable onPress={() => setMyPin("")} style={styles.submitBtn}>
+            <Pressable onPress={() => reset()} style={styles.submitBtn}>
               <Text style={styles.btnText}>Try again!</Text>
             </Pressable>
           )}
