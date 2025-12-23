@@ -28,6 +28,14 @@ export type Item = {
   user_id: number;
 };
 
+export type UpdateItem = {
+  itemID: number;
+  update: {
+    label: string;
+    category: string;
+  };
+};
+
 export type Toggle = {
   item: {
     id: number;

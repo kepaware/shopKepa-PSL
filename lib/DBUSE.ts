@@ -1,11 +1,12 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useDatabase } from "./DBAPI";
-import type { AddProps, SeedArray, Toggle, Update } from "./Types";
+import type { AddProps, SeedArray, Toggle, Update, UpdateItem } from "./Types";
 
 export function useDBFunctions() {
   const {
     getUser,
     updateUser,
+    updateItem,
     fetchAll,
     fetchListItems,
     addItem,
@@ -40,6 +41,21 @@ export function useDBFunctions() {
       },
     });
     return { isUpdating, updateName };
+  }
+
+  function useUpdateItem() {
+    const { mutate: editItem, isPending: isUpdating } = useMutation({
+      mutationFn: ({ itemID, update }: UpdateItem) =>
+        updateItem({ itemID, update }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["items"] });
+        queryClient.invalidateQueries({ queryKey: ["listItems"] });
+      },
+      onError: (error) => {
+        console.log("UPDATE ITEM ERROR: ", error.message);
+      },
+    });
+    return { isUpdating, editItem };
   }
 
   function useFetchAll() {
@@ -141,6 +157,7 @@ export function useDBFunctions() {
   return {
     useGetUser,
     useUpdateUser,
+    useUpdateItem,
     useFetchAll,
     useFetchListItems,
     useAddItem,

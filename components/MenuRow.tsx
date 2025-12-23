@@ -1,4 +1,5 @@
 import ConfirmDeleteModal from "./modals/ConfirmDeleteModal";
+import EditItemModal from "./modals/EditItemModal";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useDBFunctions } from "@/lib/DBUSE";
@@ -12,10 +13,11 @@ type ItemProps = {
   user_id?: string;
 };
 
-export default function MenuRow({ id, label, list }: ItemProps) {
+export default function MenuRow({ id, label, category, list }: ItemProps) {
   const { toggleList } = useDBFunctions().useToggleItem();
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   function handleToggle() {
     let item = {
@@ -26,44 +28,56 @@ export default function MenuRow({ id, label, list }: ItemProps) {
   }
 
   return (
-    <View style={styles.row}>
-      <View style={styles.deleteSection}>
-        <Pressable onPress={() => setShowDeleteModal(true)}>
-          <MaterialIcons name="delete" color="#666" size={22} />
-        </Pressable>
-      </View>
+    <>
+      <Pressable style={styles.row} onLongPress={() => setShowEditModal(true)}>
+        <View style={styles.deleteSection}>
+          <Pressable onPress={() => setShowDeleteModal(true)}>
+            <MaterialIcons name="delete" color="#666" size={22} />
+          </Pressable>
+        </View>
 
-      <View style={styles.labelSection}>
-        <Text style={styles.label}>{label}</Text>
-      </View>
+        <View style={styles.labelSection}>
+          <Text style={styles.label}>{label}</Text>
+        </View>
 
-      <View style={styles.actionSection}>
-        <Pressable onPress={handleToggle}>
-          {list ? (
-            <MaterialIcons
-              name="remove-circle-outline"
-              color="#ce1111"
-              size={22}
-              style={{ marginTop: 6 }}
-            />
-          ) : (
-            <MaterialIcons
-              name="add-circle-outline"
-              color="#0e90c4"
-              size={22}
-              style={{ marginTop: 6 }}
-            />
-          )}
-        </Pressable>
-      </View>
+        <View style={styles.actionSection}>
+          <Pressable onPress={handleToggle}>
+            {list ? (
+              <MaterialIcons
+                name="remove-circle-outline"
+                color="#ce1111"
+                size={22}
+                style={{ marginTop: 6 }}
+              />
+            ) : (
+              <MaterialIcons
+                name="add-circle-outline"
+                color="#0e90c4"
+                size={22}
+                style={{ marginTop: 6 }}
+              />
+            )}
+          </Pressable>
+        </View>
 
-      <ConfirmDeleteModal
-        id={id}
-        label={label}
-        showDeleteModal={showDeleteModal}
-        setShowDeleteModal={setShowDeleteModal}
-      />
-    </View>
+        {/* -------------- Modals --------------- */}
+
+        <ConfirmDeleteModal
+          id={id}
+          label={label}
+          showDeleteModal={showDeleteModal}
+          setShowDeleteModal={setShowDeleteModal}
+        />
+
+        <EditItemModal
+          id={id}
+          label={label}
+          category={category!}
+          showEditModal={showEditModal}
+          setShowEditModal={setShowEditModal}
+        />
+      </Pressable>
+    </>
   );
 }
 

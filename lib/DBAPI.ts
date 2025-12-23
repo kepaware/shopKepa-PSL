@@ -1,5 +1,13 @@
 import { useSQLiteContext } from "expo-sqlite";
-import type { User, Item, Update, AddProps, SeedArray, Toggle } from "./Types";
+import type {
+  User,
+  Item,
+  Update,
+  AddProps,
+  SeedArray,
+  Toggle,
+  UpdateItem,
+} from "./Types";
 import { Alert } from "react-native";
 
 export function useDatabase() {
@@ -25,6 +33,20 @@ export function useDatabase() {
       return data.changes;
     } catch (error) {
       Alert.alert("Update Error");
+    }
+  }
+
+  async function updateItem({ itemID, update }: UpdateItem) {
+    const { label, category } = update;
+
+    try {
+      const data = await db.runAsync(
+        `UPDATE items SET (label, category) = (?, ?) WHERE id = ${itemID}`,
+        label,
+        category
+      );
+    } catch (error) {
+      console.log("Update Item Error: ", error);
     }
   }
 
@@ -115,6 +137,7 @@ export function useDatabase() {
   return {
     getUser,
     updateUser,
+    updateItem,
     fetchAll,
     fetchListItems,
     addItem,

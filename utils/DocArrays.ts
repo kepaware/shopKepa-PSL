@@ -8,14 +8,19 @@ export const mainOverview = [
   },
   {
     key: 2,
-    text: `This will create your list automatically, with headings for "Main", "Fruit & Veges", "Pet Items" and "General".`,
+    text: `To edit a menu item, simply press and hold that item's label on the Menu page.`,
   },
   {
     key: 3,
-    text: `As you collect the items at your store, simply tick them off until the list is empty (or not).`,
+    text: `Selecting items will create your list automatically, with headings for "Main", "Fruit & Veges", "Pet Items" and "General".`,
   },
   {
     key: 4,
+    text: `As you collect the items at your store, simply tick them off until the list is empty (or not).`,
+  },
+
+  {
+    key: 5,
     text: `This app is completely offline, i.e it doesn't require internet access, or use the internet in any way.  Your menu items are stored in an internal database, accessible only on this one device.`,
   },
 ];

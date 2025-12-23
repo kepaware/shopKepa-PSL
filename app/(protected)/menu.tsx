@@ -39,8 +39,10 @@ export default function MenuScreen() {
           paddingBottom: 20,
         }}
         data={items}
-        renderItem={({ item: { id, label, list } }) => {
-          return <MenuRow id={id} label={label} list={list} />;
+        renderItem={({ item: { id, label, category, list } }) => {
+          return (
+            <MenuRow id={id} label={label} category={category} list={list} />
+          );
         }}
         alwaysBounceVertical={false}
         showsVerticalScrollIndicator={false}

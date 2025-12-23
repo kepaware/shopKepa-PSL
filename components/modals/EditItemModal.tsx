@@ -1,8 +1,8 @@
 import ToggleBtn from "../ToggleBtn";
 import { SetStateAction } from "react";
 import { useState, useEffect } from "react";
-import { useDBFunctions } from "@/lib/DBUSE";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useDBFunctions } from "@/lib/DBUSE";
 
 import {
   Modal,
@@ -14,45 +14,40 @@ import {
   View,
 } from "react-native";
 
-type AddProps = {
-  item: {
-    newLabel: string;
-    newCategory: string;
-  };
-};
-
 type Props = {
-  showItemModal: boolean;
-  setShowItemModal: React.Dispatch<SetStateAction<boolean>>;
+  id: number;
+  label: string;
+  category: string;
+  showEditModal: boolean;
+  setShowEditModal: React.Dispatch<SetStateAction<boolean>>;
 };
 
-export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
+export default function EditItemModal({
+  id,
+  label,
+  category,
+  showEditModal,
+  setShowEditModal,
+}: Props) {
+  const { editItem } = useDBFunctions().useUpdateItem();
   const insets = useSafeAreaInsets();
-  const { newItem } = useDBFunctions().useAddItem();
-
-  const [label, setLabel] = useState("");
-  const [category, setCategory] = useState("main");
-  const [multiple, setMultiple] = useState(false);
   const [activeBtn, setActiveBtn] = useState(1);
+  const [newLabel, setNewLabel] = useState("");
+  const [newCategory, setNewCategory] = useState("");
   const [error, setError] = useState("");
   const [isError, setIsError] = useState(false);
 
   const reset = () => {
-    setLabel("");
+    setNewLabel("");
     setError("");
     setIsError(false);
   };
 
-  const toggleSwitch = () => {
-    setMultiple((previousState) => !previousState);
-  };
-
   const validateLabel = () => {
     const regex = /^[a-zA-Z0-9 -]+$/;
-    const validLength = label === "" ? false : true;
     let isValid = true;
 
-    Array.from(label).forEach((char) => {
+    Array.from(newLabel).forEach((char) => {
       const result = regex.test(char);
 
       if (!result) {
@@ -62,47 +57,50 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
       }
     });
 
-    if (!validLength) {
-      setError("A label is required.");
-      setIsError(true);
-    }
-
-    if (isValid && validLength) {
+    if (isValid) {
       return true;
     } else {
       return false;
     }
   };
 
-  async function handleSave() {
+  async function handleUpdate() {
     const isValid = validateLabel();
 
-    let item = {
-      newLabel: label,
-      newCategory: category,
+    const itemID = id;
+
+    let update = {
+      label: newLabel !== "" ? newLabel : label,
+      category: newCategory !== "" ? newCategory : category,
     };
 
     if (isValid) {
-      newItem({ item });
-
-      if (!multiple) {
-        reset();
-        setShowItemModal(false);
-      } else {
-        reset();
-      }
+      editItem({ itemID, update });
+      setShowEditModal(false);
     }
   }
+
+  useEffect(() => {
+    if (category === "main") {
+      setActiveBtn(1);
+    } else if (category === "f/v") {
+      setActiveBtn(2);
+    } else if (category === "pet") {
+      setActiveBtn(3);
+    } else {
+      setActiveBtn(4);
+    }
+  }, []);
 
   return (
     <Modal
       animationType="fade"
       transparent={false}
-      visible={showItemModal}
-      onRequestClose={() => setShowItemModal(false)}
+      visible={showEditModal}
+      onRequestClose={() => setShowEditModal(false)}
     >
       <View style={[styles.modal, { paddingTop: insets.top }]}>
-        <Text style={styles.heading}>Add New Item:</Text>
+        <Text style={styles.heading}>Update Item:</Text>
 
         {/* Label Input */}
         <View style={{ marginBottom: 20 }}>
@@ -113,9 +111,9 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
             showSoftInputOnFocus={true}
             placeholder="Alpha/numeric/space/hyphen"
             style={styles.labelInput}
-            value={label}
+            defaultValue={label}
             onChangeText={(value) => {
-              setLabel(value);
+              setNewLabel(value);
             }}
           />
 
@@ -140,7 +138,7 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
               label="Main"
               activeBtn={activeBtn}
               setActiveBtn={setActiveBtn}
-              setCategory={setCategory}
+              setCategory={setNewCategory}
             />
             <ToggleBtn
               id={2}
@@ -148,7 +146,7 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
               label="F/V"
               activeBtn={activeBtn}
               setActiveBtn={setActiveBtn}
-              setCategory={setCategory}
+              setCategory={setNewCategory}
             />
             <ToggleBtn
               id={3}
@@ -156,7 +154,7 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
               label="Pet"
               activeBtn={activeBtn}
               setActiveBtn={setActiveBtn}
-              setCategory={setCategory}
+              setCategory={setNewCategory}
             />
             <ToggleBtn
               id={4}
@@ -164,21 +162,9 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
               label="Other"
               activeBtn={activeBtn}
               setActiveBtn={setActiveBtn}
-              setCategory={setCategory}
+              setCategory={setNewCategory}
             />
           </View>
-        </View>
-
-        {/* Toggle Switch: */}
-        <View style={styles.switchSection}>
-          <Text style={styles.switchText}>Create Multiple Items:</Text>
-
-          <Switch
-            trackColor={{ false: "#999", true: "#2427d8" }}
-            thumbColor={multiple ? "#2427d8" : "#999"}
-            value={multiple}
-            onValueChange={toggleSwitch}
-          />
         </View>
 
         {/* Add Item Button:  */}
@@ -186,10 +172,10 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
           <Pressable
             style={styles.saveBtn}
             onPress={() => {
-              handleSave();
+              handleUpdate();
             }}
           >
-            <Text style={styles.saveBtnText}>Add New Item</Text>
+            <Text style={styles.saveBtnText}>Update Item</Text>
           </Pressable>
         )}
         {isError && (

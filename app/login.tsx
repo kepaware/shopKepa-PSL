@@ -36,6 +36,12 @@ export default function Login() {
     validatePassword(newText);
   }, 1000);
 
+  const handleAuthTypeChange = () => {
+    setPinError(false);
+    setAuthError(null);
+    setEmailLogin(true);
+  };
+
   function validateEmail(newText: string) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -170,7 +176,7 @@ export default function Login() {
         <View style={styles.inputSection}>
           <Text style={styles.inputTitle}>Email:</Text>
           <TextInput
-            autoFocus={true}
+            autoFocus
             showSoftInputOnFocus={true}
             style={[styles.textInput, { marginBottom: inputMargins }]}
             placeholder="Email Address"
@@ -266,7 +272,7 @@ export default function Login() {
           )}
         </View>
 
-        <Pressable onPress={() => setEmailLogin(true)}>
+        <Pressable onPress={() => handleAuthTypeChange()}>
           <Text
             style={{
               fontSize: 18,
