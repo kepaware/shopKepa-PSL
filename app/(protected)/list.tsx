@@ -5,6 +5,7 @@ import { Text, StyleSheet, ScrollView, View } from "react-native";
 
 export default function List() {
   const { isFetching, listItems } = useDBFunctions().useFetchListItems();
+  const heading = `Shopping List:`;
 
   const main = listItems!.filter((e) => e.category === "main");
   const fv = listItems!.filter((e) => e.category === "f/v");
@@ -25,7 +26,7 @@ export default function List() {
   if (listItems?.length === 0) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text style={styles.heading}>Shopping List:</Text>
+        <Text style={styles.heading}>{heading}</Text>
         <View style={styles.line}></View>
 
         <Text style={styles.message}>Select items from your menu...</Text>

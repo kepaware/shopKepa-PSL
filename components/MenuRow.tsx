@@ -28,56 +28,54 @@ export default function MenuRow({ id, label, category, list }: ItemProps) {
   }
 
   return (
-    <>
-      <Pressable style={styles.row} onLongPress={() => setShowEditModal(true)}>
-        <View style={styles.deleteSection}>
-          <Pressable onPress={() => setShowDeleteModal(true)}>
-            <MaterialIcons name="delete" color="#666" size={22} />
-          </Pressable>
-        </View>
+    <Pressable style={styles.row} onLongPress={() => setShowEditModal(true)}>
+      <View style={styles.deleteSection}>
+        <Pressable onPress={() => setShowDeleteModal(true)}>
+          <MaterialIcons name="delete" color="#666" size={22} />
+        </Pressable>
+      </View>
 
-        <View style={styles.labelSection}>
-          <Text style={styles.label}>{label}</Text>
-        </View>
+      <View style={styles.labelSection}>
+        <Text style={styles.label}>{label}</Text>
+      </View>
 
-        <View style={styles.actionSection}>
-          <Pressable onPress={handleToggle}>
-            {list ? (
-              <MaterialIcons
-                name="remove-circle-outline"
-                color="#ce1111"
-                size={22}
-                style={{ marginTop: 6 }}
-              />
-            ) : (
-              <MaterialIcons
-                name="add-circle-outline"
-                color="#0e90c4"
-                size={22}
-                style={{ marginTop: 6 }}
-              />
-            )}
-          </Pressable>
-        </View>
+      <View style={styles.actionSection}>
+        <Pressable onPress={handleToggle}>
+          {list ? (
+            <MaterialIcons
+              name="remove-circle-outline"
+              color="#ce1111"
+              size={22}
+              style={{ marginTop: 6 }}
+            />
+          ) : (
+            <MaterialIcons
+              name="add-circle-outline"
+              color="#0e90c4"
+              size={22}
+              style={{ marginTop: 6 }}
+            />
+          )}
+        </Pressable>
+      </View>
 
-        {/* -------------- Modals --------------- */}
+      {/* -------------- Modals --------------- */}
 
-        <ConfirmDeleteModal
-          id={id}
-          label={label}
-          showDeleteModal={showDeleteModal}
-          setShowDeleteModal={setShowDeleteModal}
-        />
+      <ConfirmDeleteModal
+        id={id}
+        label={label}
+        showDeleteModal={showDeleteModal}
+        setShowDeleteModal={setShowDeleteModal}
+      />
 
-        <EditItemModal
-          id={id}
-          label={label}
-          category={category!}
-          showEditModal={showEditModal}
-          setShowEditModal={setShowEditModal}
-        />
-      </Pressable>
-    </>
+      <EditItemModal
+        id={id}
+        label={label}
+        category={category!}
+        showEditModal={showEditModal}
+        setShowEditModal={setShowEditModal}
+      />
+    </Pressable>
   );
 }
 

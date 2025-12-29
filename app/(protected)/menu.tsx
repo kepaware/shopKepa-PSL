@@ -5,6 +5,7 @@ import { useDBFunctions } from "@/lib/DBUSE";
 
 export default function MenuScreen() {
   const { isPending, items, error } = useDBFunctions().useFetchAll();
+  const heading = `Menu Items:`;
 
   const insets = useSafeAreaInsets();
 
@@ -25,7 +26,7 @@ export default function MenuScreen() {
     <View
       style={[styles.container, { paddingTop: insets.top, paddingBottom: 6 }]}
     >
-      <Text style={styles.title}>Menu Items:</Text>
+      <Text style={styles.title}>{heading}</Text>
       <View style={styles.line}></View>
 
       <FlatList

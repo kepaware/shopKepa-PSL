@@ -28,15 +28,49 @@ export default function AccountModal({
   const insets = useSafeAreaInsets();
   const { updateName } = useDBFunctions().useUpdateUser();
   const [newName, setNewName] = useState("");
+  const [error, setError] = useState("");
+  const [isError, setIsError] = useState(false);
+  const heading = `Change UserName:`;
+
+  const reset = () => {
+    setNewName("");
+    setError("");
+    setIsError(false);
+  };
+
+  const validateName = () => {
+    const regex = /^[a-zA-Z0-9 -]+$/;
+    let isValid = true;
+
+    Array.from(newName).forEach((char) => {
+      const result = regex.test(char);
+
+      if (!result) {
+        setError("Invalid character(s)!");
+        setIsError(true);
+        isValid = false;
+      }
+    });
+
+    if (isValid) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   async function changeName() {
+    const isValid = validateName();
+
     let update = {
       id: id,
       newName: newName,
     };
 
-    updateName({ update });
-    setShowModal(false);
+    if (isValid) {
+      updateName({ update });
+      setShowModal(false);
+    }
   }
 
   return (
@@ -52,7 +86,7 @@ export default function AccountModal({
           { paddingTop: insets.top, paddingBottom: insets.bottom },
         ]}
       >
-        <Text style={styles.heading}>Update Username:</Text>
+        <Text style={styles.heading}>{heading}</Text>
 
         <View style={styles.inputSection}>
           <Text style={styles.inputTitle}>New Name:</Text>
@@ -66,10 +100,26 @@ export default function AccountModal({
             autoCapitalize="none"
           />
 
+          {isError && <Text style={styles.error}>{error}</Text>}
+
           <View style={styles.submitSection}>
-            <Pressable onPress={() => changeName()} style={styles.submitBtn}>
-              <Text style={styles.btnText}>Submit Update</Text>
+            <Pressable
+              onPress={() => setShowModal(false)}
+              style={styles.cancelBtn}
+            >
+              <Text style={styles.cancelText}>Update</Text>
             </Pressable>
+
+            {!isError && (
+              <Pressable onPress={() => changeName()} style={styles.submitBtn}>
+                <Text style={styles.btnText}>Update</Text>
+              </Pressable>
+            )}
+            {isError && (
+              <Pressable onPress={() => reset()} style={styles.submitBtn}>
+                <Text style={styles.btnText}>Try again!</Text>
+              </Pressable>
+            )}
           </View>
         </View>
       </View>
@@ -86,10 +136,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#eee",
   },
   heading: {
+    marginTop: 40,
+    marginBottom: 20,
     fontSize: 18,
     fontWeight: 600,
     color: "blue",
-    marginVertical: 20,
   },
   inputSection: {
     width: "70%",
@@ -117,10 +168,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   submitSection: {
-    width: "100%",
     marginTop: 20,
-    // justifyContent: "center",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
+    gap: 14,
   },
   submitBtn: {
     paddingVertical: 8,
@@ -128,9 +181,27 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: "#060a31",
   },
+  cancelBtn: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    backgroundColor: "#fff",
+  },
+  cancelText: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: 600,
+  },
   btnText: {
     color: "#fff",
     fontSize: 16,
     fontWeight: 600,
+  },
+  error: {
+    fontSize: 16,
+    fontWeight: 600,
+    color: "red",
+    marginTop: 14,
+    paddingLeft: 4,
   },
 });

@@ -10,6 +10,7 @@ export default function Account() {
   const insets = useSafeAreaInsets();
   const { isPending, user } = useDBFunctions().useGetUser();
   const [showModal, setShowModal] = useState(false);
+  const heading = "Profile";
 
   async function signOut() {
     authContext.logOut();
@@ -19,7 +20,7 @@ export default function Account() {
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <Text style={styles.heading}>Profile:</Text>
+      <Text style={styles.heading}>{heading}:</Text>
 
       <View style={styles.detailSection}>
         <Text style={styles.rowTitle}>Email:</Text>
@@ -89,7 +90,7 @@ const styles = StyleSheet.create({
   logoutBtn: {
     marginTop: 30,
     borderRadius: 6,
-    backgroundColor: "#5a0a0e",
+    backgroundColor: "#0a125a",
   },
   changeBtnText: {
     fontSize: 16,

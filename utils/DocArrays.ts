@@ -23,6 +23,10 @@ export const mainOverview = [
     key: 5,
     text: `This app is completely offline, i.e it doesn't require internet access, or use the internet in any way.  Your menu items are stored in an internal database, accessible only on this one device.`,
   },
+  {
+    key: 6,
+    text: `This app has built-in protection against XSS and other types of attack. Your PIN and password are encrypted.`,
+  },
 ];
 
 export const recovery = [

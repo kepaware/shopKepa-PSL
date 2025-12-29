@@ -36,6 +36,7 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
   const [activeBtn, setActiveBtn] = useState(1);
   const [error, setError] = useState("");
   const [isError, setIsError] = useState(false);
+  const heading = `Add New Item:`;
 
   const reset = () => {
     setLabel("");
@@ -102,7 +103,7 @@ export default function ItemModal({ showItemModal, setShowItemModal }: Props) {
       onRequestClose={() => setShowItemModal(false)}
     >
       <View style={[styles.modal, { paddingTop: insets.top }]}>
-        <Text style={styles.heading}>Add New Item:</Text>
+        <Text style={styles.heading}>{heading}</Text>
 
         {/* Label Input */}
         <View style={{ marginBottom: 20 }}>
@@ -222,7 +223,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#ddd",
   },
   heading: {
-    marginVertical: 20,
+    marginTop: 30,
+    marginBottom: 20,
     fontSize: 20,
     fontWeight: 500,
     color: "blue",

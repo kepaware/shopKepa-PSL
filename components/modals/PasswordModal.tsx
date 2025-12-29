@@ -26,6 +26,7 @@ export default function PasswordModal({ showModal, setShowModal }: ModalProps) {
   const { isPending, user } = useDBFunctions().useGetUser();
   let btnText = myPassword !== "" ? myPassword : "Retrieve Password";
   let btnTextColor = "#fff";
+  const heading = `Forgot My Password:`;
 
   function clearFields() {
     setError("");
@@ -71,7 +72,7 @@ export default function PasswordModal({ showModal, setShowModal }: ModalProps) {
           { paddingTop: insets.top, paddingBottom: insets.bottom },
         ]}
       >
-        <Text style={styles.heading}>Forgot My Password:</Text>
+        <Text style={styles.heading}>{heading}</Text>
 
         <View style={styles.inputSection}>
           <Text style={styles.inputTitle}>Username:</Text>

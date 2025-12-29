@@ -4,6 +4,7 @@ import { AuthProvider } from "@/utils/authContext";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type SQLiteDatabase, SQLiteProvider } from "expo-sqlite";
+import { Alert } from "react-native";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,12 +21,12 @@ const createDBIfNeeded = async (db: SQLiteDatabase) => {
   try {
     response = await db.execAsync(
       `
-          CREATE TABLE IF NOT EXISTS shopusers (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, pin INTEGER, email TEXT, password TEXT, greeting TEXT);
+          CREATE TABLE IF NOT EXISTS shopusers (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, email TEXT, greeting TEXT);
           CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, label TEXT, category TEXT, list BOOL, user_id INTEGER);
         `
     );
   } catch (error) {
-    console.error("Error creating database: ", error);
+    Alert.alert(`Error creating database:  ${error}`);
     createDBError = true;
   }
 };

@@ -1,12 +1,20 @@
 import PasswordModal from "@/components/modals/PasswordModal";
 import { AuthContext } from "@/utils/authContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useDBFunctions } from "@/lib/DBUSE";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDebouncedCallback } from "use-debounce";
 import * as FileSystem from "expo-file-system/legacy";
+import * as SecureStore from "expo-secure-store";
 
-import { Pressable, View, Text, StyleSheet, TextInput } from "react-native";
+import {
+  Alert,
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+} from "react-native";
 
 export default function Login() {
   const authContext = useContext(AuthContext);
@@ -23,10 +31,34 @@ export default function Login() {
   const [pwError, setPwError] = useState<string | null>(null);
   const [emailLogin, setEmailLogin] = useState(false);
   const [myPin, setMyPin] = useState("");
+  const [securePIN, setSecurePIN] = useState<string | null>(null);
+  const [securePW, setSecurePW] = useState<string | null>(null);
 
   const inputMargins = emailError ? 8 : 20;
 
   const DB_NAME = "shopkepa.db";
+
+  async function loadSecureValues() {
+    try {
+      const pin = await SecureStore.getItemAsync("shopKepaPIN");
+      if (pin) {
+        setSecurePIN(pin);
+      } else {
+        setSecurePIN(null);
+        Alert.alert("Error loading Secure Pin");
+      }
+
+      const pw = await SecureStore.getItemAsync("shopKepaPW");
+      if (pw) {
+        setSecurePW(pw);
+      } else {
+        setSecurePW(null);
+        Alert.alert("Error loading Secure Password");
+      }
+    } catch (error) {
+      Alert.alert(`Error loading secure values: ${error}`);
+    }
+  }
 
   const debounceEmail = useDebouncedCallback((newText) => {
     validateEmail(newText);
@@ -72,10 +104,9 @@ export default function Login() {
     }
   }
 
-  //Function to confirm credentials are correct:
   function checkCredentials() {
     const trueEmail = user?.email;
-    const truePassword = user?.password;
+    const truePassword = securePW;
     const verifiedEmail = email === trueEmail ? true : false;
     const verifiedPassword = password === truePassword ? true : false;
 
@@ -89,8 +120,8 @@ export default function Login() {
   async function signInWithPin() {
     const regex = /^[Z0-9]+$/;
     const validLength = myPin.length === 4 ? true : false;
-    const truePIN = user?.pin;
-    const verifiedPin = Number(myPin) === truePIN ? true : false;
+    const truePIN = securePIN;
+    const verifiedPin = Number(myPin) === Number(truePIN) ? true : false;
     let isValid = false;
 
     setLoading(true);
@@ -154,6 +185,15 @@ export default function Login() {
     }
   }
 
+  useEffect(() => {
+    loadSecureValues();
+  });
+
+  const verifyText = `Verifying your credentials...`;
+  const pinHeading = `Sign in with PIN:`;
+  const emailHeading = `Sign in to your Account:`;
+  const uninstallText = `Uninstalling this application?`;
+
   if (loading || isPending) {
     return (
       <View
@@ -163,7 +203,7 @@ export default function Login() {
         ]}
       >
         <Text style={{ marginTop: 30, textAlign: "center", fontWeight: 600 }}>
-          Verifying your credentials...
+          {verifyText}
         </Text>
       </View>
     );
@@ -177,7 +217,7 @@ export default function Login() {
           { paddingTop: insets.top, paddingBottom: insets.bottom },
         ]}
       >
-        <Text style={styles.heading}>Sign In to your Account:</Text>
+        <Text style={styles.heading}>{emailHeading}</Text>
 
         <View style={styles.inputSection}>
           <Text style={styles.inputTitle}>Email:</Text>
@@ -247,7 +287,7 @@ export default function Login() {
           { paddingTop: insets.top, paddingBottom: insets.bottom },
         ]}
       >
-        <Text style={styles.pinHeading}>Sign in with PIN:</Text>
+        <Text style={styles.pinHeading}>{pinHeading}</Text>
         <View style={[{ flexDirection: "column", marginTop: 40 }]}>
           <Text style={[styles.inputTitle]}>4-Digit PIN:</Text>
           <TextInput
@@ -300,7 +340,7 @@ export default function Login() {
               marginTop: 30,
             }}
           >
-            Uninstalling this application?
+            {uninstallText}
           </Text>
         </Pressable>
 

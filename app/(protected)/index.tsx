@@ -17,6 +17,12 @@ export default function HomeScreen() {
   const [showDocsModal, setShowDocsModal] = useState(false);
   const router = useRouter();
 
+  const greeting = "Welcome";
+  const subheading = "to";
+  const logo = "shopKepa";
+  const copyright = `by kepaware`;
+  const statsText = "LIST:";
+
   const [fontsLoaded] = useFonts({
     Orbitron: require("@/assets/fonts/Orbitron-Regular.ttf"),
   });
@@ -50,23 +56,23 @@ export default function HomeScreen() {
         <Ionicons name="person" color="#3854f0" size={40} />
       </Link>
 
-      <Text style={styles.welcome}>Welcome</Text>
+      <Text style={styles.welcome}>{greeting}</Text>
       <Text style={styles.heading}>{user?.username ? user.username : ""}</Text>
-      <Text style={styles.to}>to</Text>
+      <Text style={styles.to}>{subheading}</Text>
 
       {/* Logo: */}
       <View style={styles.logoSection}>
-        <Text style={styles.logoTitle}>shopKepa</Text>
-        <Text style={styles.copyright}>by kepaWare</Text>
+        <Text style={styles.logoTitle}>{logo}</Text>
+        <Text style={styles.copyright}>{copyright}</Text>
       </View>
 
       <View style={{ marginTop: 50, flexDirection: "row", gap: 14 }}>
-        <View style={{ width: 62, justifyContent: "center" }}>
-          <Text style={styles.statsText}>MENU:</Text>
+        <View style={{ width: 50, justifyContent: "center" }}>
+          <Text style={styles.statsText}>{statsText}</Text>
         </View>
 
         <View style={{ width: 20, justifyContent: "flex-end" }}>
-          <Text style={styles.statsText}>{items!.length}</Text>
+          <Text style={styles.statsNum}>{listItems!.length}</Text>
         </View>
       </View>
 
@@ -139,6 +145,11 @@ const styles = StyleSheet.create({
   statsText: {
     fontSize: 18,
     fontWeight: 700,
+  },
+  statsNum: {
+    fontSize: 18,
+    fontWeight: 700,
+    color: "#30be77",
   },
   link: {
     position: "absolute",

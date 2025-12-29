@@ -2,6 +2,7 @@ import { useContext, useState, KeyboardEvent } from "react";
 import { AuthContext } from "@/utils/authContext";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useSQLiteContext } from "expo-sqlite";
+import * as SecureStore from "expo-secure-store";
 import {
   Alert,
   View,
@@ -47,7 +48,6 @@ export default function Register() {
 
     Array.from(name).forEach((char) => {
       const result = regex.test(char);
-      console.log("Result: ", result);
 
       if (!result) {
         isError = true;
@@ -112,30 +112,42 @@ export default function Register() {
     }
   }
 
+  async function savePIN(value: string) {
+    try {
+      await SecureStore.setItemAsync("shopKepaPIN", value);
+    } catch (error) {
+      Alert.alert("Error Saving PIN!");
+    }
+  }
+
+  async function savePW(value: string) {
+    try {
+      await SecureStore.setItemAsync("shopKepaPW", value);
+    } catch (error) {
+      Alert.alert("Error Saving Password!");
+    }
+  }
+
   async function signUpWithEmail() {
-    const newPIN = Number(myPin);
     const validName = validateName();
     const validPIN = validatePIN();
     const validEmail = validateEmail();
     const validPassword = validatePassword();
 
     if (validName && validPIN && validEmail && validPassword) {
-      console.log("All fields validated");
       try {
-        await db
-          .runAsync(
-            "INSERT INTO shopusers (username, pin, email, password) VALUES (?, ?, ?, ?)",
-            name,
-            newPIN,
-            newEmail,
-            newPassword
-          )
-          .then(() => {
-            authContext.deRegister();
-            authContext.logIn();
-          });
+        await db.runAsync(
+          "INSERT INTO shopusers (username, email) VALUES (?, ?)",
+          name,
+          newEmail
+        );
+
+        savePIN(myPin);
+        savePW(newPassword);
+        authContext.deRegister();
+        authContext.logIn();
       } catch (error) {
-        Alert.alert("ERROR REGISTERING... ");
+        Alert.alert(`ERROR REGISTERING: ${error}`);
       }
     }
   }
